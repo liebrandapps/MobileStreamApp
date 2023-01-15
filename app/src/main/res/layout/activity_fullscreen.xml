@@ -1,0 +1,894 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/dark_gray"
+    android:theme="@style/ThemeOverlay.NebulaTV.FullscreenContainer"
+    android:layout_weight="5"
+    android:orientation="horizontal"
+    tools:context=".FullscreenActivity"
+    android:id="@+id/fullscreen_container">
+
+        <!-- The primary full-screen view. This can be replaced with whatever view
+         is needed to present your content, e.g. VideoView, SurfaceView,
+         TextureView, etc. -->
+        <com.google.android.exoplayer2.ui.PlayerView
+            android:id="@+id/full_screen_video"
+            app:use_controller="false"
+            android:layout_width="720dp"
+            android:layout_height="405dp"
+            />
+
+
+
+        <!-- VideoView
+            android:id="@+id/vvScreen2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" /-->
+        <!--TextView
+            android:id="@+id/fullscreen_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:keepScreenOn="true"
+            android:text="@string/dummy_content"
+            android:textColor="?attr/fullscreenTextColor"
+            android:textSize="50sp"
+            android:textStyle="bold" /-->
+
+        <!-- This FrameLayout insets its children based on system windows using
+            android:fitsSystemWindows. -->
+
+        <ImageView
+            android:id="@+id/imgWeatherToday"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            android:contentDescription="@string/weather_today"
+                />
+
+        <TextView
+            android:id="@+id/txtWeatherToday"
+            android:layout_width="50dp"
+            android:layout_height="20dp"
+            android:textColor="#FFFFFF"
+            android:textAlignment="center"
+                android:layout_below="@id/imgWeatherToday"
+            android:layout_alignParentEnd="true"
+                />
+
+        <ImageView
+            android:id="@+id/imgWeatherTomorrow"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentEnd="true"
+            android:layout_below="@id/txtWeatherToday"
+            android:contentDescription="@string/weather_tomorrow" />
+
+        <TextView
+            android:id="@+id/txtWeatherTomorrow"
+            android:layout_width="50dp"
+            android:layout_height="20dp"
+            android:textColor="#FFFFFF"
+            android:textAlignment="center"
+            android:layout_below="@id/imgWeatherTomorrow"
+            android:layout_alignParentEnd="true"
+            />
+
+        <ImageView
+            android:id="@+id/imgSunrise"
+            android:layout_width="25dp"
+            android:layout_height="50dp"
+            android:layout_alignStart="@id/txtWeatherTomorrow"
+            android:layout_below="@id/txtWeatherTomorrow"
+            android:contentDescription="@string/sunrise"
+            android:src="@drawable/sunrise"
+            />
+
+        <TextView
+            android:id="@+id/txtSunrise"
+            android:layout_width="25dp"
+            android:layout_height="20dp"
+            android:textColor="#FFFFFF"
+            android:textAlignment="center"
+            android:layout_below="@id/imgSunrise"
+            android:layout_alignStart="@id/txtWeatherTomorrow"
+            />
+
+        <ImageView
+            android:id="@+id/imgSunset"
+            android:layout_width="25dp"
+            android:layout_height="50dp"
+            android:layout_below="@id/txtWeatherTomorrow"
+            android:layout_alignParentEnd="true"
+            android:contentDescription="@string/sunset"
+            android:src="@drawable/sunset"
+            />
+
+        <TextView
+            android:id="@+id/txtSunset"
+            android:layout_width="25dp"
+            android:layout_height="20dp"
+            android:textColor="#FFFFFF"
+            android:textAlignment="center"
+            android:layout_below="@id/imgSunset"
+            android:layout_alignParentEnd="true"
+            />
+
+
+
+        <Button
+            android:id="@+id/station1"
+            android:layout_width="100dp"
+            android:layout_height="75dp"
+            android:background="@color/dark_gray"
+            android:layout_below="@id/full_screen_video"
+            android:textColor="#FFFFFF"
+            android:text="CNN HD" />
+
+        <Button
+            android:id="@+id/station2"
+            android:layout_width="100dp"
+            android:layout_height="75dp"
+            android:background="@color/dark_gray"
+            android:layout_alignTop="@id/station1"
+            android:layout_toEndOf="@id/station1"
+            android:textColor="#FFFFFF"
+            android:text="ARD HD" />
+
+        <Button
+            android:id="@+id/station3"
+            android:layout_width="100dp"
+            android:layout_height="75dp"
+            android:background="@color/dark_gray"
+            android:layout_alignTop="@id/station1"
+            android:layout_toEndOf="@id/station2"
+            android:textColor="#FFFFFF"
+            android:text="ZDF HD" />
+
+        <Button
+            android:id="@+id/station4"
+            android:layout_width="100dp"
+            android:layout_height="75dp"
+            android:background="@color/dark_gray"
+            android:layout_alignTop="@id/station1"
+            android:layout_toEndOf="@id/station3"
+            android:textColor="#FFFFFF"
+            android:text="WDR HD" />
+
+        <Button
+            android:id="@+id/station5"
+            android:layout_width="100dp"
+            android:layout_height="75dp"
+            android:background="@color/dark_gray"
+            android:layout_alignTop="@id/station1"
+            android:layout_toEndOf="@id/station4"
+            android:textColor="#FFFFFF"
+            android:text="BBC ONE HD" />
+        <Button
+            android:id="@+id/station6"
+            android:layout_width="100dp"
+            android:layout_height="75dp"
+            android:background="@color/dark_gray"
+            android:layout_alignTop="@id/station1"
+            android:layout_toEndOf="@id/station5"
+            android:textColor="#FFFFFF"
+            android:text="BBC TWO HD" />
+        <Button
+            android:id="@+id/station7"
+            android:layout_width="100dp"
+            android:layout_height="75dp"
+            android:background="@color/dark_gray"
+            android:layout_alignTop="@id/station1"
+            android:layout_toEndOf="@id/station6"
+            android:textColor="#FFFFFF"
+            android:text="ITV Be" />
+        <Button
+            android:id="@+id/station8"
+            android:layout_width="100dp"
+            android:layout_height="75dp"
+            android:background="@color/dark_gray"
+            android:layout_alignTop="@id/station1"
+            android:layout_toEndOf="@id/station7"
+            android:textColor="#FFFFFF"
+            android:text="-08-" />
+        <Button
+            android:id="@+id/station9"
+            android:layout_width="100dp"
+            android:layout_height="75dp"
+            android:background="@color/dark_gray"
+            android:layout_below="@id/station1"
+            android:layout_alignStart="@id/station1"
+            android:textColor="#FFFFFF"
+            android:textAllCaps="false"
+            android:text="-09-" />
+        <Button
+            android:id="@+id/station10"
+            android:layout_width="100dp"
+            android:layout_height="75dp"
+            android:background="@color/dark_gray"
+            android:layout_below="@id/station1"
+            android:layout_toEndOf="@id/station9"
+            android:textColor="#FFFFFF"
+            android:text="-10-" />
+        <Button
+            android:id="@+id/station11"
+            android:layout_width="100dp"
+            android:layout_height="75dp"
+            android:background="@color/dark_gray"
+            android:layout_below="@id/station1"
+            android:layout_toEndOf="@id/station10"
+            android:textColor="#FFFFFF"
+            android:text="-11-" />
+        <Button
+            android:id="@+id/station12"
+            android:layout_width="100dp"
+            android:layout_height="75dp"
+            android:background="@color/dark_gray"
+            android:layout_below="@id/station1"
+            android:layout_toEndOf="@id/station11"
+            android:textColor="#FFFFFF"
+            android:text="-12-" />
+        <Button
+            android:id="@+id/station13"
+            android:layout_width="100dp"
+            android:layout_height="75dp"
+            android:background="@color/dark_gray"
+            android:layout_below="@id/station1"
+            android:layout_toEndOf="@id/station12"
+            android:textColor="#FFFFFF"
+            android:text="-13-" />
+        <Button
+            android:id="@+id/station14"
+            android:layout_width="100dp"
+            android:layout_height="75dp"
+            android:background="@color/dark_gray"
+            android:layout_below="@id/station1"
+            android:layout_toEndOf="@id/station13"
+            android:textColor="#FFFFFF"
+            android:text="-14-" />
+        <Button
+            android:id="@+id/station15"
+            android:layout_width="100dp"
+            android:layout_height="75dp"
+            android:background="@color/dark_gray"
+            android:layout_below="@id/station1"
+            android:layout_toEndOf="@id/station14"
+            android:textColor="#FFFFFF"
+            android:text="-15-" />
+        <Button
+            android:id="@+id/station16"
+            android:layout_width="100dp"
+            android:layout_height="75dp"
+            android:background="@color/dark_gray"
+            android:layout_below="@id/station1"
+            android:layout_toEndOf="@id/station15"
+            android:textColor="#FFFFFF"
+            android:text="FTP" />
+        <TextView
+            android:id="@+id/statusbar"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:background="@color/dark_gray"
+            android:textColor="@color/teal_700"
+            android:gravity="center"
+            android:textSize="18sp"
+            android:layout_below="@id/station9"
+            android:layout_alignStart="@id/station1" />
+
+
+        <Button
+            android:id="@+id/btnExit"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_toEndOf="@id/statusbar"
+            android:layout_below="@id/station9"
+            android:background="@color/dark_gray"
+            android:text="@string/txtbtnExit"
+            android:textColor="#FFFFFF"
+            android:visibility="visible" />
+
+        <TextView
+            android:id="@+id/lblFtp"
+            android:layout_width="100dp"
+            android:layout_height="40dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true"
+            android:textSize="20sp"
+            android:textColor="@color/white"
+            android:text="FTP Browser"
+            />
+
+        <Button
+            android:id="@+id/btnPrevSvr"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentLeft="true"
+            android:layout_below ="@id/lblFtp"
+            android:textColor="@color/white"
+            android:background="@color/dark_gray"
+            android:text = "@string/arrow_left"
+                />
+        <TextView
+                android:id="@+id/lblFtpServer"
+            android:layout_width="200dp"
+            android:layout_height="50dp"
+            android:layout_below="@id/lblFtp"
+            android:layout_toEndOf="@id/btnPrevSvr"
+            android:gravity="center_horizontal|center_vertical"
+            android:textColor="@color/white"
+            android:text=""
+                />
+        <Button
+                android:id="@+id/btnNxtSvr"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+                android:layout_below="@id/lblFtp"
+                android:layout_toEndOf="@id/lblFtpServer"
+            android:textColor="@color/white"
+            android:background="@color/dark_gray"
+                android:text="@string/arrow_right"
+                />
+        <View
+            android:id="@+id/lineHoriz2"
+            android:layout_width="900dp"
+            android:layout_height="2dp"
+            android:background="#c0c0c0"
+            android:layout_marginBottom="2dp"
+            android:layout_marginTop="2dp"
+            android:layout_alignParentStart="true"
+            android:layout_below="@id/btnPrevSvr"
+            />
+
+        <Button
+            android:id="@+id/btnUp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentStart="true"
+            android:layout_below="@id/lineHoriz2"
+            android:textColor="@color/white"
+            android:background="@color/dark_gray"
+            android:text="@string/arrow_up"
+        />
+        <TextView
+            android:id="@+id/lblName"
+            android:layout_width="100dp"
+            android:layout_height="60dp"
+            android:layout_toEndOf="@id/btnUp"
+            android:layout_below="@id/lineHoriz2"
+            android:textSize="20sp"
+            android:gravity="bottom"
+            android:text="Name"
+            android:textColor="@color/white"
+            android:tag="@string/tag_filename"
+            />
+
+        <TextView
+            android:id="@+id/lblSize"
+            android:layout_width="40dp"
+            android:layout_height="60dp"
+            android:layout_alignTop="@id/lblName"
+            android:layout_toEndOf="@id/lblName"
+            android:textSize="20sp"
+            android:gravity="bottom"
+            android:text="Size"
+            android:textColor="@color/white"
+            android:tag="@string/tag_filesize"
+            />
+
+        <View
+            android:id="@+id/lineHoriz"
+            android:layout_width="900dp"
+            android:layout_height="2dp"
+            android:background="#c0c0c0"
+            android:layout_alignStart="@id/lblName"
+            android:layout_below="@id/lblName"
+            />
+
+        <Button
+            android:id="@+id/valName1"
+            android:layout_width="100dp"
+            android:layout_height="20dp"
+            android:layout_alignStart="@id/lblName"
+            android:layout_below="@id/lineHoriz"
+            android:textSize="12sp"
+            android:gravity="start"
+            android:background="?android:attr/selectableItemBackground"
+            android:textStyle="normal"
+            android:text=""
+            android:textColor="@color/white"
+            style="?android:attr/borderlessButtonStyle"
+            android:tag="@string/tag_filename"
+            />
+
+        <TextView
+            android:id="@+id/valSize1"
+            android:layout_width="40dp"
+            android:layout_height="20dp"
+            android:layout_alignStart="@id/lblSize"
+            android:layout_below="@id/lineHoriz"
+            android:gravity="end"
+            android:textSize="12sp"
+            android:text=""
+            android:textColor="@color/white"
+            android:tag="@string/tag_filesize"
+            />
+
+        <Button
+            android:id="@+id/valName2"
+            android:layout_width="100dp"
+            android:layout_height="20dp"
+            android:layout_alignStart="@id/lblName"
+            android:layout_below="@id/valName1"
+            android:textSize="12sp"
+            android:gravity="start"
+            android:background="?android:attr/selectableItemBackground"
+            android:textStyle="normal"
+            android:text=""
+            android:textColor="@color/white"
+            style="?android:attr/borderlessButtonStyle"
+            android:tag="@string/tag_filename"
+            />
+
+        <TextView
+            android:id="@+id/valSize2"
+            android:layout_width="40dp"
+            android:layout_height="20dp"
+            android:layout_alignTop="@id/valName2"
+            android:layout_alignStart="@id/lblSize"
+            android:gravity="end"
+            android:textSize="12sp"
+            android:text=""
+            android:textColor="@color/white"
+            android:tag="@string/tag_filesize"
+            />
+
+        <Button
+            android:id="@+id/valName3"
+            android:layout_width="100dp"
+            android:layout_height="20dp"
+            android:layout_alignStart="@id/lblName"
+            android:layout_below="@id/valName2"
+            android:textSize="12sp"
+            android:gravity="start"
+            android:background="?android:attr/selectableItemBackground"
+            android:textStyle="normal"
+            android:text=""
+            android:textColor="@color/white"
+            style="?android:attr/borderlessButtonStyle"
+            android:tag="@string/tag_filename"
+            />
+
+        <TextView
+            android:id="@+id/valSize3"
+            android:layout_width="40dp"
+            android:layout_height="20dp"
+            android:layout_alignTop="@id/valName3"
+            android:layout_alignStart="@id/lblSize"
+            android:gravity="end"
+            android:textSize="12sp"
+            android:text=""
+            android:textColor="@color/white"
+            android:tag="@string/tag_filesize"
+            />
+
+        <Button
+            android:id="@+id/valName4"
+            android:layout_width="100dp"
+            android:layout_height="20dp"
+            android:layout_alignStart="@id/lblName"
+            android:layout_below="@id/valName3"
+            android:textSize="12sp"
+            android:gravity="start"
+            android:background="?android:attr/selectableItemBackground"
+            android:textStyle="normal"
+            android:text=""
+            android:textColor="@color/white"
+            style="?android:attr/borderlessButtonStyle"
+            android:tag="@string/tag_filename"
+            />
+
+        <TextView
+            android:id="@+id/valSize4"
+            android:layout_width="40dp"
+            android:layout_height="20dp"
+            android:layout_alignTop="@id/valName4"
+            android:layout_alignStart="@id/lblSize"
+            android:gravity="end"
+            android:textSize="12sp"
+            android:text=""
+            android:textColor="@color/white"
+            android:tag="@string/tag_filesize"
+            />
+
+        <Button
+            android:id="@+id/valName5"
+            android:layout_width="100dp"
+            android:layout_height="20dp"
+            android:layout_alignStart="@id/lblName"
+            android:layout_below="@id/valName4"
+            android:textSize="12sp"
+            android:gravity="start"
+            android:background="?android:attr/selectableItemBackground"
+            android:textStyle="normal"
+            android:text=""
+            android:textColor="@color/white"
+            style="?android:attr/borderlessButtonStyle"
+            android:tag="@string/tag_filename"
+            />
+
+        <TextView
+            android:id="@+id/valSize5"
+            android:layout_width="40dp"
+            android:layout_height="20dp"
+            android:layout_alignTop="@id/valName5"
+            android:layout_alignStart="@id/lblSize"
+            android:gravity="end"
+            android:textSize="12sp"
+            android:text=""
+            android:textColor="@color/white"
+            android:tag="@string/tag_filesize"
+            />
+
+        <Button
+            android:id="@+id/valName6"
+            android:layout_width="100dp"
+            android:layout_height="20dp"
+            android:layout_alignStart="@id/lblName"
+            android:layout_below="@id/valName5"
+            android:textSize="12sp"
+            android:gravity="start"
+            android:background="?android:attr/selectableItemBackground"
+            android:textStyle="normal"
+            android:text=""
+            android:textColor="@color/white"
+            style="?android:attr/borderlessButtonStyle"
+            android:tag="@string/tag_filename"
+            />
+
+        <TextView
+            android:id="@+id/valSize6"
+            android:layout_width="40dp"
+            android:layout_height="20dp"
+            android:layout_alignTop="@id/valName6"
+            android:layout_alignStart="@id/lblSize"
+            android:gravity="end"
+            android:textSize="12sp"
+            android:text=""
+            android:textColor="@color/white"
+            android:tag="@string/tag_filesize"
+            />
+
+        <Button
+            android:id="@+id/valName7"
+            android:layout_width="100dp"
+            android:layout_height="20dp"
+            android:layout_alignStart="@id/lblName"
+            android:layout_below="@id/valName6"
+            android:textSize="12sp"
+            android:gravity="start"
+            android:background="?android:attr/selectableItemBackground"
+            android:textStyle="normal"
+            android:text=""
+            android:textColor="@color/white"
+            style="?android:attr/borderlessButtonStyle"
+            android:tag="@string/tag_filename"
+            />
+
+        <TextView
+            android:id="@+id/valSize7"
+            android:layout_width="40dp"
+            android:layout_height="20dp"
+            android:layout_alignTop="@id/valName7"
+            android:layout_alignStart="@id/lblSize"
+            android:gravity="end"
+            android:textSize="12sp"
+            android:text=""
+            android:textColor="@color/white"
+            android:tag="@string/tag_filesize"
+            />
+
+        <Button
+            android:id="@+id/valName8"
+            android:layout_width="100dp"
+            android:layout_height="20dp"
+            android:layout_alignStart="@id/lblName"
+            android:layout_below="@id/valName7"
+            android:textSize="12sp"
+            android:gravity="start"
+            android:background="?android:attr/selectableItemBackground"
+            android:textStyle="normal"
+            android:text=""
+            android:textColor="@color/white"
+            style="?android:attr/borderlessButtonStyle"
+            android:tag="@string/tag_filename"
+            />
+
+        <TextView
+            android:id="@+id/valSize8"
+            android:layout_width="40dp"
+            android:layout_height="20dp"
+            android:layout_alignTop="@id/valName8"
+            android:layout_alignStart="@id/lblSize"
+            android:gravity="end"
+            android:textSize="12sp"
+            android:text=""
+            android:textColor="@color/white"
+            android:tag="@string/tag_filesize"
+            />
+
+        <Button
+            android:id="@+id/valName9"
+            android:layout_width="100dp"
+            android:layout_height="20dp"
+            android:layout_alignStart="@id/lblName"
+            android:layout_below="@id/valName8"
+            android:textSize="12sp"
+            android:gravity="start"
+            android:background="?android:attr/selectableItemBackground"
+            android:textStyle="normal"
+            android:text=""
+            android:textColor="@color/white"
+            style="?android:attr/borderlessButtonStyle"
+            android:tag="@string/tag_filename"
+            />
+
+        <TextView
+            android:id="@+id/valSize9"
+            android:layout_width="40dp"
+            android:layout_height="20dp"
+            android:layout_alignTop="@id/valName9"
+            android:layout_alignStart="@id/lblSize"
+            android:gravity="end"
+            android:textSize="12sp"
+            android:text=""
+            android:textColor="@color/white"
+            android:tag="@string/tag_filesize"
+            />
+
+        <Button
+            android:id="@+id/valName10"
+            android:layout_width="100dp"
+            android:layout_height="20dp"
+            android:layout_alignStart="@id/lblName"
+            android:layout_below="@id/valName9"
+            android:textSize="12sp"
+            android:gravity="start"
+            android:background="?android:attr/selectableItemBackground"
+            android:textStyle="normal"
+            android:text=""
+            android:textColor="@color/white"
+            style="?android:attr/borderlessButtonStyle"
+            android:tag="@string/tag_filename"
+            />
+
+        <TextView
+            android:id="@+id/valSize10"
+            android:layout_width="40dp"
+            android:layout_height="20dp"
+            android:layout_alignTop="@id/valName10"
+            android:layout_alignStart="@id/lblSize"
+            android:gravity="end"
+            android:textSize="12sp"
+            android:text=""
+            android:textColor="@color/white"
+            android:tag="@string/tag_filesize"
+            />
+        <Button
+            android:id="@+id/valName11"
+            android:layout_width="100dp"
+            android:layout_height="20dp"
+            android:layout_alignStart="@id/valName10"
+            android:layout_below="@id/valName10"
+            android:textSize="12sp"
+            android:gravity="start"
+            android:background="?android:attr/selectableItemBackground"
+            android:textStyle="normal"
+            android:text=""
+            android:textColor="@color/white"
+            style="?android:attr/borderlessButtonStyle"
+            android:tag="@string/tag_filename"
+            />
+
+        <TextView
+            android:id="@+id/valSize11"
+            android:layout_width="40dp"
+            android:layout_height="20dp"
+            android:layout_alignStart="@id/lblSize"
+            android:layout_below="@id/valSize10"
+            android:gravity="end"
+            android:textSize="12sp"
+            android:text=""
+            android:textColor="@color/white"
+            android:tag="@string/tag_filesize"
+            />
+
+        <Button
+            android:id="@+id/valName12"
+            android:layout_width="100dp"
+            android:layout_height="20dp"
+            android:layout_alignStart="@id/lblName"
+            android:layout_below="@id/valName11"
+            android:textSize="12sp"
+            android:gravity="start"
+            android:background="?android:attr/selectableItemBackground"
+            android:textStyle="normal"
+            android:text=""
+            android:textColor="@color/white"
+            style="?android:attr/borderlessButtonStyle"
+            android:tag="@string/tag_filename"
+            />
+
+        <TextView
+            android:id="@+id/valSize12"
+            android:layout_width="40dp"
+            android:layout_height="20dp"
+            android:layout_alignTop="@id/valName12"
+            android:layout_alignStart="@id/lblSize"
+            android:gravity="end"
+            android:textSize="12sp"
+            android:text=""
+            android:textColor="@color/white"
+            android:tag="@string/tag_filesize"
+            />
+
+        <Button
+            android:id="@+id/valName13"
+            android:layout_width="100dp"
+            android:layout_height="20dp"
+            android:layout_alignStart="@id/lblName"
+            android:layout_below="@id/valName12"
+            android:textSize="12sp"
+            android:gravity="start"
+            android:background="?android:attr/selectableItemBackground"
+            android:textStyle="normal"
+            android:text=""
+            android:textColor="@color/white"
+            style="?android:attr/borderlessButtonStyle"
+            android:tag="@string/tag_filename"
+            />
+
+        <TextView
+            android:id="@+id/valSize13"
+            android:layout_width="40dp"
+            android:layout_height="20dp"
+            android:layout_alignTop="@id/valName13"
+            android:layout_alignStart="@id/lblSize"
+            android:gravity="end"
+            android:textSize="12sp"
+            android:text=""
+            android:textColor="@color/white"
+            android:tag="@string/tag_filesize"
+            />
+
+        <Button
+            android:id="@+id/valName14"
+            android:layout_width="100dp"
+            android:layout_height="20dp"
+            android:layout_alignStart="@id/lblName"
+            android:layout_below="@id/valName13"
+            android:textSize="12sp"
+            android:gravity="start"
+            android:background="?android:attr/selectableItemBackground"
+            android:textStyle="normal"
+            android:text=""
+            android:textColor="@color/white"
+            style="?android:attr/borderlessButtonStyle"
+            android:tag="@string/tag_filename"
+            />
+
+        <TextView
+            android:id="@+id/valSize14"
+            android:layout_width="40dp"
+            android:layout_height="20dp"
+            android:layout_alignTop="@id/valName14"
+            android:layout_alignStart="@id/lblSize"
+            android:gravity="end"
+            android:textSize="12sp"
+            android:text=""
+            android:textColor="@color/white"
+            android:tag="@string/tag_filesize"
+            />
+
+        <Button
+            android:id="@+id/valName15"
+            android:layout_width="100dp"
+            android:layout_height="20dp"
+            android:layout_alignStart="@id/lblName"
+            android:layout_below="@id/valName14"
+            android:textSize="12sp"
+            android:gravity="start"
+            android:background="?android:attr/selectableItemBackground"
+            android:textStyle="normal"
+            android:text=""
+            android:textColor="@color/white"
+            style="?android:attr/borderlessButtonStyle"
+            android:tag="@string/tag_filename"
+            />
+
+        <TextView
+            android:id="@+id/valSize15"
+            android:layout_width="40dp"
+            android:layout_height="20dp"
+            android:layout_alignTop="@id/valName15"
+            android:layout_alignStart="@id/lblSize"
+            android:gravity="end"
+            android:textSize="12sp"
+            android:text=""
+            android:textColor="@color/white"
+            android:tag="@string/tag_filesize"
+            />
+
+        <Button
+            android:id="@+id/valNameLast"
+            android:layout_width="100dp"
+            android:layout_height="20dp"
+            android:layout_alignStart="@id/lblName"
+            android:layout_below="@id/valName15"
+            android:textSize="12sp"
+            android:gravity="start"
+            android:background="?android:attr/selectableItemBackground"
+            android:textStyle="normal"
+            android:text=""
+            android:textColor="@color/white"
+            style="?android:attr/borderlessButtonStyle"
+            android:tag="@string/tag_filename"
+            />
+
+        <TextView
+            android:id="@+id/valSizeLast"
+            android:layout_width="40dp"
+            android:layout_height="20dp"
+            android:layout_alignTop="@id/valNameLast"
+            android:layout_alignStart="@id/lblSize"
+            android:gravity="end"
+            android:textSize="12sp"
+            android:text=""
+            android:textColor="@color/white"
+            android:tag="@string/tag_filesize"
+            />
+        <Button
+            android:id="@+id/btnDown"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentStart = "true"
+            android:layout_below="@id/valNameLast"
+            android:textColor="@color/white"
+            android:background="@color/dark_gray"
+            android:text="@string/arrow_down"
+                />
+        <Button
+            android:id="@+id/btnCancel"
+            android:layout_width="50dp"
+            android:layout_height="60dp"
+            android:layout_alignStart="@id/btnExit2"
+            android:layout_below="@id/btnExit2"
+            android:textColor="@color/white"
+            android:background="@color/dark_gray"
+            android:text="Cancel"
+                />
+        <Button
+            android:id="@+id/btnExit2"
+            android:layout_width="50dp"
+            android:layout_height="60dp"
+            android:layout_alignStart="@id/full_screen_video"
+            android:layout_below="@id/full_screen_video"
+            android:textColor="@color/white"
+            android:background="@color/dark_gray"
+            android:text="Exit"
+            />
+        <TextView
+            android:id="@+id/lblStatus"
+            android:layout_width="fill_parent"
+            android:layout_height="60dp"
+            android:layout_alignStart="@id/valNameLast"
+            android:layout_below="@id/valNameLast"
+            android:textColor="@color/teal_700"
+            android:text="Browse using up &amp; down, press ok to select file"
+            />
+
+</RelativeLayout>

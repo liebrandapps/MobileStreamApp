@@ -1,0 +1,9 @@
+
+
+
+
+#EXT-X-MEDIA:TYPE=CREDENTIAL,GROUP-ID=Credential-Id,NAME=name,USER=user,PASSWORD=password
+
+#EXT-X-STREAM-INF:NAME=Station-Name,CREDENTIAL=Credential-Id,SLOT=number
+http://url
+

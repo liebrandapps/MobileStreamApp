@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<resources>
+    <string name="app_name">NebulaTV</string>
+    <string name="txtbtnPlay">Play</string>
+    <string name="txtbtnStop">Stop</string>
+    <string name="txtbtnExit">Exit</string>
+    <string name="weather_today">Weather Today</string>
+    <string name="weather_tomorrow">Weather tomorrow</string>
+    <string name="sunrise">Sunrise</string>
+    <string name="sunset">Sunset</string>
+    <string name="ok">Ok</string>
+    <string name="initemplate">"
+# the general section is required for any configuration
+[general]
+stationCount=(number of stations (max is 15, start with 1))
+ftpServerCount=(number of ftp servers (start with 1)
+
+#UNCOMMENT AND COPY THE FOLLOWING SECTIONS AS NEEDED
+
+# for stationCount number the following section must be repeatet
+# change the number in the section 1,2,3,..
+#[station_1]
+#name=(name to appear on the button in UI, keep it short)
+#url=(streaming url)
+#user=(user name, if login is required, otherwise put in the user key)
+#pass=(password, ..)
+#slot=(button 1..15 to assign this station to, don't assign 2 stations to same button)
+#mediaType=0 - HLS, 1 - RTSP - use 0 unless it is RTSP
+
+# for each FTP server a copy of the following section is needed
+# change the number in the section 1,2,3,..
+#[ftp_1]
+#name=(name to appear in UI, keep it short)
+#host=(URL of FTP Server)
+#user=(user name for logon)
+#pass=(password, ..)
+#initialDir=(directory to change to after login)
+
+        "</string>
+    <string name="arrow_left"><b>\u2190</b></string>
+    <string name="arrow_right"><b>\u2192</b></string>
+    <string name="arrow_up"><b>\u2191</b></string>
+    <string name="arrow_down"><b>\u2193</b></string>
+    <string name="tag_filename">FILENAME</string>
+    <string name="tag_filesize">SIZE</string>
+</resources>

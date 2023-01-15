@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="utf-8">
+    <meta name="description" content="MiniBeam Streaming Configuration">
+    <link rel="stylesheet" href="./nbatv.css">
+    <script src="./nbatv.js"></script>
+    <link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="./favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="./favicon-16x16.png">
+    <link rel="icon" type="image/x-icon" href="./favicon.ico">
+    <link rel="manifest" href="./site.webmanifest">
+    <link rel="mask-icon" href="./safari-pinned-tab.svg" color="#5bbad5">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="theme-color" content="#ffffff">
+    <title>
+        MiniBeam Web Server
+    </title>
+</head>
+<body>
+    <form action="/saveConfig" method="post" enctype="application/x-www-form-urlencoded">
+    <p></p><label for="cfg">Configuration</label></p>
+    <textarea id="cfg" name="cfgView" rows="20" cols="80">###INI###
+    </textarea>
+        <br>
+        <input type="submit" value="Save">
+    </form>
+    <div id="services" style="###SHOW_SERVICES###">
+        <br>
+        <hr>
+        <br>
+        <p>Services in Bouquet</p>
+        <br>
+        <table>
+            ###SERVICES###
+        </table>
+    </div>
+</body>

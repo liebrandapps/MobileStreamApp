@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/lblftpServer"
+        android:layout_width="40px"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:text="Server:"
+        />
+
+    <TextView
+        android:id="@+id/valftpServer"
+        android:layout_width="100px"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/lblftpServer"
+        android:layout_toEndOf="@id/lblftpServer"
+        android:text=""
+        />
+
+    <TextView
+        android:id="@+id/lblName"
+        android:layout_width="100px"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/lblftpServer"
+        android:text="Name"
+        />
+
+    <TextView
+        android:id="@+id/lblSize"
+        android:layout_width="40px"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/lblName"
+        android:layout_toEndOf="@id/lblName"
+        android:text="Size"
+        />
+
+    <TextView
+        android:id="@+id/valName1"
+        android:layout_width="100px"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/lblName"
+        android:text=""
+        />
+
+    <TextView
+        android:id="@+id/valSize1"
+        android:layout_width="40px"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/valName1"
+        android:layout_toEndOf="@id/valName1"
+        android:text=""
+        />
+
+    <TextView
+        android:id="@+id/valName2"
+        android:layout_width="100px"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/valName1"
+        android:text=""
+        />
+
+    <TextView
+        android:id="@+id/valSize2"
+        android:layout_width="40px"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/valName2"
+        android:layout_toEndOf="@id/valName2"
+        android:text=""
+        />
+
+    <TextView
+        android:id="@+id/valName3"
+        android:layout_width="100px"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/valName2"
+        android:text=""
+        />
+
+    <TextView
+        android:id="@+id/valSize3"
+        android:layout_width="40px"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/valName3"
+        android:layout_toEndOf="@id/valName3"
+        android:text=""
+        />
+
+    <TextView
+        android:id="@+id/valName4"
+        android:layout_width="100px"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/valName3"
+        android:text=""
+        />
+
+    <TextView
+        android:id="@+id/valSize4"
+        android:layout_width="40px"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/valName4"
+        android:layout_toEndOf="@id/valName4"
+        android:text=""
+        />
+
+    <TextView
+        android:id="@+id/valName5"
+        android:layout_width="100px"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/valName4"
+        android:text=""
+        />
+
+    <TextView
+        android:id="@+id/valSize5"
+        android:layout_width="40px"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/valName5"
+        android:layout_toEndOf="@id/valName5"
+        android:text=""
+        />
+
+    <TextView
+        android:id="@+id/valName6"
+        android:layout_width="100px"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/valName5"
+        android:text=""
+        />
+
+    <TextView
+        android:id="@+id/valSize6"
+        android:layout_width="40px"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/valName6"
+        android:layout_toEndOf="@id/valName6"
+        android:text=""
+        />
+
+    <TextView
+        android:id="@+id/valName7"
+        android:layout_width="100px"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/valName6"
+        android:text=""
+        />
+
+    <TextView
+        android:id="@+id/valSize7"
+        android:layout_width="40px"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/valName7"
+        android:layout_toEndOf="@id/valName7"
+        android:text=""
+        />
+
+    <TextView
+        android:id="@+id/valName8"
+        android:layout_width="100px"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/valName7"
+        android:text=""
+        />
+
+    <TextView
+        android:id="@+id/valSize8"
+        android:layout_width="40px"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/valName8"
+        android:layout_toEndOf="@id/valName8"
+        android:text=""
+        />
+
+    <TextView
+        android:id="@+id/valName9"
+        android:layout_width="100px"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/valName8"
+        android:text=""
+        />
+
+    <TextView
+        android:id="@+id/valSize9"
+        android:layout_width="40px"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/valName9"
+        android:layout_toEndOf="@id/valName9"
+        android:text=""
+        />
+
+    <TextView
+        android:id="@+id/valName10"
+        android:layout_width="100px"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/valName9"
+        android:text=""
+        />
+
+    <TextView
+        android:id="@+id/valSize10"
+        android:layout_width="40px"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/valName10"
+        android:layout_toEndOf="@id/valName10"
+        android:text=""
+        />
+    <TextView
+        android:id="@+id/lblStatus"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/valName10"
+        android:text="Browse using up &amp; down, press ok to select file"
+        />
+</RelativeLayout>
