@@ -1,9 +1,15 @@
 package io.liebrand.multistreamapp;
 
+/*
+  Mark Liebrand 2023
+
+  This file is part of MobileStreamApp which is released under the Apache 2.0 License
+  See file LICENSE or go to for full license details https://github.com/liebrandapps/MobileStreamApp
+ */
+
 import android.content.SharedPreferences;
 
 public class Station {
-    private final String TAG = "STATION";
 
     public static final String KEY_STATION_IDS = "stationIds";
     public static final String NAME = "name";
@@ -41,6 +47,7 @@ public class Station {
      */
     public boolean valid(StringBuilder sb) {
         boolean result = true;
+        String TAG = "STATION";
         if (index==-1) {
             Configuration.printMessage(Configuration.SEV_WARN, TAG, "Class seems to be not initialized. Index is -1", sb);
         }

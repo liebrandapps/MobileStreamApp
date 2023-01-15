@@ -1,5 +1,13 @@
 package io.liebrand.multistreamapp;
 
+/*
+  Mark Liebrand 2023
+
+  This file is part of MobileStreamApp which is released under the Apache 2.0 License
+  See file LICENSE or go to for full license details https://github.com/liebrandapps/MobileStreamApp
+ */
+
+
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
@@ -56,10 +64,6 @@ import java.util.Objects;
 import io.liebrand.exoplayer2.ExDataSource;
 import io.liebrand.multistreamapp.databinding.ActivityFullscreenBinding;
 
-/**
- * An example full-screen activity that shows and hides the system UI (i.e.
- * status bar and navigation/system bar) with user interaction.
- */
 public class FullscreenActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static final int MODE_VIEW_BUTTONS = 0;
