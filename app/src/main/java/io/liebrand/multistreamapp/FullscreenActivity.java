@@ -270,7 +270,17 @@ public class FullscreenActivity extends AppCompatActivity implements View.OnClic
                 lp.width = (int) Math.abs(dpWidth) - (7 * stationWidth);
             }
             lp.height = stationHeight / 2;
+            view.setOnClickListener(this);
         }
+        binding.btnAbout.setOnClickListener(this);
+        binding.btnFtp.setOnClickListener(this);
+        binding.btnExit.setOnClickListener(this);
+        binding.btnExit2.setOnClickListener(this);
+        binding.btnCancel.setOnClickListener(this);
+        binding.btnUp.setOnClickListener(this);
+        binding.btnDown.setOnClickListener(this);
+        binding.btnNxtSvr.setOnClickListener(this);
+        binding.btnPrevSvr.setOnClickListener(this);
         binding.statusbar.getLayoutParams().height = controlsHeight;
         binding.statusbar.getLayoutParams().width = stationWidth * 7;
 
@@ -292,6 +302,7 @@ public class FullscreenActivity extends AppCompatActivity implements View.OnClic
         binding.txtSunset.getLayoutParams().height = tmp + 10;
         binding.imgSunrise.getLayoutParams().height = 2 * tmp;
         binding.txtSunrise.getLayoutParams().height = tmp + 10;
+
 
         updateStationTitles(arrResIds);
 
@@ -323,6 +334,7 @@ public class FullscreenActivity extends AppCompatActivity implements View.OnClic
                 String tag = (String)vw.getTag();
                 if(tag.equals(tagFilename)) {
                     ((ViewGroup.LayoutParams)vw.getLayoutParams()).width = wCol2;
+                    vw.setOnClickListener(this);
                 }
                 if(tag.equals(tagFilesize)) {
                     ((ViewGroup.LayoutParams)vw.getLayoutParams()).width = wCol3;
@@ -790,6 +802,8 @@ public class FullscreenActivity extends AppCompatActivity implements View.OnClic
         return super.onKeyUp(keyCode, event);
     }
 
+
+
     private void switchStation(Station s) {
 
             if(mPlayer!=null) {
@@ -1002,6 +1016,8 @@ public class FullscreenActivity extends AppCompatActivity implements View.OnClic
         s.mediaType = Station.MTYPE_HLS;
         appContext.configuration.stationMap.put(2, s);
     }
+
+
 
     public class M3U8Receiver extends BroadcastReceiver {
 
