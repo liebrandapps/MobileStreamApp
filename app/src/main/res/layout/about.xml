@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/border"
+    >
+
+    <TextView
+        android:id="@+id/lblTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="40sp"
+        android:text = "MobileStreamApp"
+        android:layout_marginTop="25dp"
+        android:layout_marginStart="25dp"
+        android:layout_marginEnd="25dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:textColor="@color/white"
+
+        />
+
+    <TextView
+        android:id="@+id/lblCopyright"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text = "@string/copyright"
+        android:layout_marginTop="25dp"
+        android:layout_marginEnd="25dp"
+        android:layout_below="@id/lblTitle"
+        android:layout_alignStart="@id/lblTitle"
+        android:textColor="@color/white"
+        />
+
+    <TextView
+        android:id="@+id/libs1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="This application uses a copy of the following libraries:"
+        android:layout_below="@id/lblCopyright"
+        android:layout_alignStart="@id/lblCopyright"
+        android:layout_marginTop="25dp"
+        android:layout_marginEnd="25dp"
+        android:textColor="@color/white"
+        />
+
+    <TextView
+        android:id="@+id/libs2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Apache Commons (https://commons.apache.org)"
+        android:layout_below="@id/libs1"
+        android:layout_alignStart="@id/lblCopyright"
+        android:layout_marginEnd="25dp"
+        android:textColor="@color/white"
+        />
+
+    <TextView
+        android:id="@+id/libs3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Exoplayer (https://exoplayer.dev)"
+        android:layout_marginTop="25dp"
+        android:layout_below="@id/libs2"
+        android:layout_alignStart="@id/lblCopyright"
+        android:layout_marginEnd="25dp"
+        android:textColor="@color/white"
+        />
+
+    <TextView
+        android:id="@+id/source"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/libs3"
+        android:layout_marginTop="25dp"
+        android:layout_alignStart="@id/lblCopyright"
+        android:text="Source Code of the application: https://github.com/liebrandapps/MobileStreamApp"
+        android:layout_marginEnd="25dp"
+        android:textColor="@color/white"
+        />
+
+    <TextView
+        android:id = "@+id/license"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/source"
+        android:layout_marginTop="25dp"
+        android:layout_alignStart="@id/lblCopyright"
+        android:text=" Released under Apache License 2.0 (See https://github.com/liebrandapps/MobileStreamApp/blob/master/LICENSE)"
+        android:layout_marginEnd="25dp"
+        android:textColor="@color/white"
+        />
+
+    <Button
+        android:id="@+id/dismiss"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="100dp"
+        android:layout_marginEnd="100dp"
+        android:layout_below="@id/license"
+        android:text = "@string/ok"
+        android:textColor="@color/white"
+        />
+
+</RelativeLayout>

@@ -43,4 +43,5 @@ ftpServerCount=(number of ftp servers (start with 1)
     <string name="arrow_down"><b>\u2193</b></string>
     <string name="tag_filename">FILENAME</string>
     <string name="tag_filesize">SIZE</string>
+    <string name="copyright">&#169; Mark Liebrand 2023</string>
 </resources>

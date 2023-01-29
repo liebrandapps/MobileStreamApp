@@ -267,7 +267,25 @@
             android:layout_below="@id/station1"
             android:layout_toEndOf="@id/station15"
             android:textColor="#FFFFFF"
+            android:text="-16-" />
+        <Button
+            android:id="@+id/btnFtp"
+            android:layout_width="100dp"
+            android:layout_height="75dp"
+            android:background="@color/dark_gray"
+            android:layout_above="@id/station8"
+            android:layout_alignParentEnd="true"
+            android:textColor="#FFFFFF"
             android:text="FTP" />
+        <Button
+            android:id="@+id/btnAbout"
+            android:layout_width="100dp"
+            android:layout_height="75dp"
+            android:background="@color/dark_gray"
+            android:layout_above="@id/btnFtp"
+            android:layout_alignParentEnd="true"
+            android:textColor="#FFFFFF"
+            android:text="About" />
         <TextView
             android:id="@+id/statusbar"
             android:layout_width="100dp"
@@ -307,7 +325,7 @@
             android:id="@+id/btnPrevSvr"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
             android:layout_below ="@id/lblFtp"
             android:textColor="@color/white"
             android:background="@color/dark_gray"

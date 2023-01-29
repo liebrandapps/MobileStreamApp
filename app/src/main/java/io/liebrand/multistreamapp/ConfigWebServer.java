@@ -110,7 +110,7 @@ public class ConfigWebServer {
                                     }
                                     file = parts[1];
                                     if (file.equals("/")) {
-                                        file = "index30807.html";
+                                        file = "index.html";
                                     }
                                     else {
                                         if (file.startsWith("/upload")) {

@@ -80,7 +80,7 @@ public class FullscreenActivity extends AppCompatActivity implements View.OnClic
     private static final int [] navst5 = { R.id.btnExit, R.id.station13, R.id.station4, R.id.station6 };
     private static final int [] navst6 = { R.id.btnExit, R.id.station14, R.id.station5, R.id.station7 };
     private static final int [] navst7 = { R.id.btnExit, R.id.station15, R.id.station6, R.id.station8 };
-    private static final int [] navst8 = { R.id.btnExit, R.id.station16, R.id.station7, R.id.station1 };
+    private static final int [] navst8 = { R.id.btnFtp, R.id.station16, R.id.station7, R.id.station1 };
     private static final int [] navst9 = { R.id.station1, R.id.btnExit, R.id.station16, R.id.station10 };
     private static final int [] navst10 = { R.id.station2, R.id.btnExit, R.id.station9, R.id.station11 };
     private static final int [] navst11 = { R.id.station3, R.id.btnExit, R.id.station10, R.id.station12 };
@@ -89,7 +89,9 @@ public class FullscreenActivity extends AppCompatActivity implements View.OnClic
     private static final int [] navst14 = { R.id.station6, R.id.btnExit, R.id.station13, R.id.station15 };
     private static final int [] navst15 = { R.id.station7, R.id.btnExit, R.id.station14, R.id.station16 };
     private static final int [] navst16 = { R.id.station8, R.id.btnExit, R.id.station15, R.id.station9 };
-    private static final int [] navExit = { R.id.station1, R.id.station8, R.id.station1, R.id.station8 };
+    private static final int [] navFtp = { R.id.btnAbout, R.id.station8, R.id.station1, R.id.station1 };
+    private static final int [] navAbout = { R.id.station16, R.id.btnFtp, R.id.station1, R.id.station1 };
+    private static final int [] navExit = { R.id.station1, R.id.btnFtp, R.id.station1, R.id.station8 };
 
     private Map<Integer, int[]> navFtpMap;
     private int navFtpFocus = R.id.btnCancel;
@@ -189,11 +191,14 @@ public class FullscreenActivity extends AppCompatActivity implements View.OnClic
                 R.id.station15, R.id.station16
         };
         int[][] tmpNav = {navst1, navst2, navst3, navst4, navst5, navst6, navst7,
-                navst8, navst9, navst10, navst11, navst12, navst13, navst14, navst15, navst16};
+                navst8, navst9, navst10, navst11, navst12, navst13, navst14, navst15, navst16
+            };
         for (int i = 0; i < arrResIds.length; i++) {
             navMap.put(arrResIds[i], tmpNav[i]);
         }
         navMap.put(R.id.btnExit, navExit);
+        navMap.put(R.id.btnAbout, navAbout);
+        navMap.put(R.id.btnFtp, navFtp);
         navFtpMap = new HashMap<>();
         arrFtpResIds = new int[]{R.id.valName1, R.id.valName2, R.id.valName3, R.id.valName4,
                 R.id.valName5, R.id.valName6, R.id.valName7, R.id.valName8, R.id.valName9, R.id.valName10,
@@ -251,6 +256,10 @@ public class FullscreenActivity extends AppCompatActivity implements View.OnClic
         binding.fullScreenVideo.getLayoutParams().height = videoHeight;
         binding.btnExit.getLayoutParams().width = stationWidth;
         binding.btnExit.getLayoutParams().height = controlsHeight;
+        binding.btnAbout.getLayoutParams().width = widgetWidth;
+        binding.btnAbout.getLayoutParams().height = stationHeight / 2;
+        binding.btnFtp.getLayoutParams().width = widgetWidth;
+        binding.btnFtp.getLayoutParams().height = stationHeight / 2;
 
         for (int viewId : arrResIds) {
             View view = findViewById(viewId);
@@ -442,6 +451,8 @@ public class FullscreenActivity extends AppCompatActivity implements View.OnClic
             View view = findViewById(viewId);
             view.setVisibility(View.GONE);
         }
+        binding.btnAbout.setVisibility(View.GONE);
+        binding.btnFtp.setVisibility(View.GONE);
         binding.btnExit.setVisibility(View.GONE);
         binding.statusbar.setVisibility(View.GONE);
         binding.imgWeatherToday.setVisibility(View.GONE);
@@ -468,6 +479,8 @@ public class FullscreenActivity extends AppCompatActivity implements View.OnClic
                 View view = findViewById(viewId);
                 view.setVisibility(View.VISIBLE);
             }
+            binding.btnAbout.setVisibility(View.VISIBLE);
+            binding.btnFtp.setVisibility(View.VISIBLE);
             binding.btnExit.setVisibility(View.VISIBLE);
             binding.statusbar.setVisibility(View.VISIBLE);
             binding.imgWeatherToday.setVisibility(View.VISIBLE);
@@ -583,7 +596,7 @@ public class FullscreenActivity extends AppCompatActivity implements View.OnClic
             }
             finish();
         }
-        if(viewId==R.id.station16) {
+        if(viewId==R.id.btnFtp) {
             if(mPlayer!=null) {
                 mPlayer.stop();
             }
@@ -610,6 +623,10 @@ public class FullscreenActivity extends AppCompatActivity implements View.OnClic
                     binding.lblFtpServer.setText(ftpConfiguration.name);
                 }
             }
+        }
+        if(view.getId()==R.id.btnAbout) {
+            AboutDialog ad = new AboutDialog(this);
+            ad.show();
         }
         if(view.getTag()!=null) {
             String tag = (String)view.getTag();
@@ -653,6 +670,7 @@ public class FullscreenActivity extends AppCompatActivity implements View.OnClic
             case R.id.station13:
             case R.id.station14:
             case R.id.station15:
+            case R.id.station16:
 
                 Station s = appContext.stationMap.get(viewId);
                 switchStation(s);
