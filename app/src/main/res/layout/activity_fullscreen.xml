@@ -286,6 +286,16 @@
             android:layout_alignParentEnd="true"
             android:textColor="#FFFFFF"
             android:text="About" />
+
+        <ImageView
+            android:id="@+id/lblVPN"
+            android:layout_width="50dp"
+            android:layout_height="100dp"
+            android:src="@drawable/vpn"
+            android:layout_below="@id/station9"
+            android:layout_alignStart="@id/station1"
+            />
+
         <TextView
             android:id="@+id/statusbar"
             android:layout_width="100dp"
@@ -295,7 +305,7 @@
             android:gravity="center"
             android:textSize="18sp"
             android:layout_below="@id/station9"
-            android:layout_alignStart="@id/station1" />
+            android:layout_toEndOf="@id/lblVPN" />
 
 
         <Button

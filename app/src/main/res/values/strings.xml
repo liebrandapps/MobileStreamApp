@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <resources>
-    <string name="app_name">NebulaTV</string>
+    <string name="app_name">MobileStreamApp</string>
     <string name="txtbtnPlay">Play</string>
     <string name="txtbtnStop">Stop</string>
     <string name="txtbtnExit">Exit</string>

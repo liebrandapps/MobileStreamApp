@@ -10,6 +10,8 @@ package io.liebrand.multistreamapp;
 import java.util.HashMap;
 import java.util.Map;
 
+import io.liebrand.remote.WireGuard;
+
 public class AppContext {
 
     public static final String KEY_LONGITUDE = "longitude";
@@ -18,11 +20,13 @@ public class AppContext {
     public Map<Integer, Station> stationMap;
     public Configuration configuration;
     public Enigma2 enigma2;
+    public WireGuard wg;
 
     public AppContext() {
         configuration = new Configuration(this);
         stationMap = new HashMap<>();
         enigma2 = new Enigma2();
+        wg = new WireGuard();
     }
 
 }

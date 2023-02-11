@@ -8,13 +8,7 @@ package io.liebrand.multistreamapp;
  */
 
 import android.content.SharedPreferences;
-import android.util.Log;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -22,6 +16,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import io.liebrand.remote.WireGuard;
 
 
 /*
@@ -80,6 +76,7 @@ public class Configuration {
             ftpServerList.put(idx+1, f);
         }
         appContext.enigma2.load(sPrefs);
+        appContext.wg.load(sPrefs);
     }
 
     public void save(SharedPreferences sPrefs) {
@@ -94,29 +91,13 @@ public class Configuration {
        editor.putInt(STATION_COUNT, stationMap.size());
        editor.putInt(FTP_COUNT, ftpServerList.size());
        appContext.enigma2.save(editor);
+       appContext.wg.save(editor);
 
        DateFormat df = DateFormat.getDateTimeInstance();
        String now = df.format(new Date());
 
        editor.putString(TAG, now);
        editor.commit();
-    }
-
-    public void exportToIni(String path) {
-        String data = exportToIniString();
-        File f = new File(path, INIFILE);
-        try {
-            FileOutputStream outStream = new FileOutputStream(f);
-            PrintWriter pw = new PrintWriter(outStream);
-            pw.print(data);
-            pw.flush();
-            pw.close();
-            outStream.close();
-        } catch (FileNotFoundException e) {
-            Log.e(TAG, "File not Exception on write -> missing WRITE_EXTERNAL_STORAGE in manifest?");
-        } catch (IOException e) {
-            Log.e(TAG, "IOException: " + e.getMessage());
-        }
     }
 
     public String exportToIniString() {
@@ -145,6 +126,9 @@ public class Configuration {
         }
         addSection(Enigma2.SECTION, sb);
         appContext.enigma2.exportToIni(sb);
+        sb.append("\n");
+        addSection(WireGuard.SECTION, sb);
+        appContext.wg.exportToIni(sb);
 
         return sb.toString();
     }
@@ -248,6 +232,12 @@ public class Configuration {
             appContext.enigma2.user = mapEnigma2.getOrDefault(Enigma2.USER, "");
             appContext.enigma2.password = mapEnigma2.getOrDefault(Enigma2.PASSWORD, "");
             appContext.enigma2.vpnbypass = mapEnigma2.getOrDefault(Enigma2.VPNBYPASS, "");
+        }
+        Map<String, String> mapWg = entries.get(WireGuard.SECTION);
+        if(mapWg!=null) {
+            appContext.wg.isEnabled = convertToBoolean(mapWg.getOrDefault(WireGuard.ENABLE, "no"));
+            appContext.wg.tunnel = mapWg.get(WireGuard.TUNNEL);
+            appContext.wg.localNetworks = mapWg.get(WireGuard.LOCAL_NETWORKS);
         }
     }
 

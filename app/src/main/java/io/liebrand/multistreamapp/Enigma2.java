@@ -71,14 +71,6 @@ public class Enigma2 {
             Configuration.addKeyValue(USER, user, sb);
             Configuration.addKeyValue(PASSWORD, password, sb);
         }
-        //Configuration.addComment("If the receiver can be reached through the internet in parallel to the VPN, you may add the host name here.", sb);
-        //Configuration.addComment("Purpose of this function is to avoid streaming through VPN (because the VPN is maybe too slow)", sb);
-        if(vpnbypass==null || vpnbypass.length()==0) {
-            Configuration.addComment(VPNBYPASS + "=", sb);
-        }
-        else {
-            Configuration.addKeyValue(VPNBYPASS, vpnbypass, sb);
-        }
     }
 
 

@@ -14,8 +14,6 @@ import android.preference.PreferenceManager;
 import android.util.Base64;
 import android.util.Log;
 
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
@@ -111,15 +109,6 @@ public class ConfigWebServer {
                                     file = parts[1];
                                     if (file.equals("/")) {
                                         file = "index.html";
-                                    }
-                                    else {
-                                        if (file.startsWith("/upload")) {
-                                            String line;
-                                            while((line = is.readLine()) != null) {
-                                                Log.i("NTV", line);
-                                            }
-                                        }
-
                                     }
                                 }
                                 assert header != null;
@@ -294,34 +283,6 @@ public class ConfigWebServer {
         return result;
     }
 
-
-    private String processAPIRequest(String input)  {
-        JSONObject jsonOutput = new JSONObject();
-        try {
-            JSONObject jsonInput = new JSONObject(input);
-
-            if(jsonInput.has("command")) {
-                String cmd = jsonInput.getString("command");
-
-                if (cmd.equals("credsList")) {
-
-                }
-            }
-            else {
-                jsonOutput.put("status", "fail");
-                jsonOutput.put("reason", "no 'command' specified");
-            }
-        }
-        catch(JSONException eX) {
-            try {
-                jsonOutput.put("status", "fail")
-                        .put("reason", "error paring json received from browser")
-                        .put("detail", eX.getMessage());
-            }
-            catch(JSONException ignored) {}
-        }
-        return jsonOutput.toString();
-    }
 
     private String replaceTags(String replaceMe) {
         StringBuilder sb = new StringBuilder();

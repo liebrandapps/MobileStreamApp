@@ -17,6 +17,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
+import android.net.ConnectivityManager;
+import android.net.Network;
 import android.net.Uri;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
@@ -42,6 +44,7 @@ import android.widget.Toast;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
 import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.MediaItem;
@@ -63,6 +66,7 @@ import java.util.Objects;
 
 import io.liebrand.exoplayer2.ExDataSource;
 import io.liebrand.multistreamapp.databinding.ActivityFullscreenBinding;
+import io.liebrand.remote.WireguardMonitor;
 
 public class FullscreenActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -143,11 +147,13 @@ public class FullscreenActivity extends AppCompatActivity implements View.OnClic
     public static final String INTENT_CFG_UPDATE ="configUpdate";
     public final static String INTENT_ENIGMA2 = "enigma2";
     public final static String INTENT_RCV_FILES = "ftpFilesReceived";
+    public final static String INTENT_WG_MONITOR = "wgMonitor";
 
     private EnvDataReceiver envDataReceiver;
     private ConfigUpdateReceiver cfgUpdateReceiver;
     private Enigma2Receiver enigma2Receiver;
     private FtpReceiver ftpReceiver;
+    private WgMonitor wgMonitor;
 
     private AppContext appContext;
     private Station curStation;
@@ -163,6 +169,7 @@ public class FullscreenActivity extends AppCompatActivity implements View.OnClic
     private int curFtpServerIndex;
     private ActivityFullscreenBinding binding;
     private ConfigWebServer cWS;
+    private WireguardMonitor wireguardMonitor;
     int [] arrResIds;
     int [] arrFtpResIds;
     int [] arrFtpExtraResIds;
@@ -182,6 +189,7 @@ public class FullscreenActivity extends AppCompatActivity implements View.OnClic
         cfgUpdateReceiver = new ConfigUpdateReceiver();
         enigma2Receiver = new Enigma2Receiver();
         ftpReceiver = new FtpReceiver();
+        wgMonitor = new WgMonitor();
         appContext = new AppContext();
 
         navMap = new HashMap<>();
@@ -283,6 +291,9 @@ public class FullscreenActivity extends AppCompatActivity implements View.OnClic
         binding.btnPrevSvr.setOnClickListener(this);
         binding.statusbar.getLayoutParams().height = controlsHeight;
         binding.statusbar.getLayoutParams().width = stationWidth * 7;
+        binding.lblVPN.setVisibility(View.GONE);
+        binding.lblVPN.getLayoutParams().height = controlsHeight;
+        binding.lblVPN.getLayoutParams().width = 100;
 
         binding.imgWeatherToday.getLayoutParams().width = widgetWidth;
         binding.txtWeatherToday.getLayoutParams().width = widgetWidth;
@@ -306,13 +317,36 @@ public class FullscreenActivity extends AppCompatActivity implements View.OnClic
 
         updateStationTitles(arrResIds);
 
-        WifiManager wifi = (WifiManager) getSystemService(Context.WIFI_SERVICE);
-        int levels = 100;
-        WifiInfo wifiInfo = wifi.getConnectionInfo();
-        int level = WifiManager.calculateSignalLevel(wifiInfo.getRssi(), levels);
-        int ip = wifi.getConnectionInfo().getIpAddress();
-        String ipStrg = String.format("%d.%d.%d.%d", (ip & 0xff), (ip >> 8 & 0xff), (ip >> 16 & 0xff), (ip >> 24 & 0xff));
-        binding.statusbar.setText(String.format("Press 'OK' to start streaming [Wifi Strength is %d %%, IP %s]", level, ipStrg));
+        /*
+            Networking
+         */
+        ConnectivityManager.NetworkCallback networkCallback = new ConnectivityManager.NetworkCallback() {
+            @Override
+            public void onAvailable(Network network) {
+                // network available
+                WifiManager wifi = (WifiManager) getSystemService(Context.WIFI_SERVICE);
+                int levels = 100;
+                WifiInfo wifiInfo = wifi.getConnectionInfo();
+                int level = WifiManager.calculateSignalLevel(wifiInfo.getRssi(), levels);
+                int ip = wifi.getConnectionInfo().getIpAddress();
+                String ipStrg = String.format("%d.%d.%d.%d", (ip & 0xff), (ip >> 8 & 0xff), (ip >> 16 & 0xff), (ip >> 24 & 0xff));
+                binding.statusbar.setText(String.format("Press 'OK' to start streaming [Wifi Strength is %d %%, IP %s]", level, ipStrg));
+                appContext.wg.connectVPN(FullscreenActivity.this, ip);
+            }
+
+            @Override
+            public void onLost(Network network) {
+                binding.statusbar.setText("No network connectivity");
+            }
+        };
+        ConnectivityManager connectivityManager =
+                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        connectivityManager.registerDefaultNetworkCallback(networkCallback);
+
+        if(appContext.wg.isEnabled) {
+            wireguardMonitor = new WireguardMonitor(this, appContext, stationWidth);
+            wireguardMonitor.start();
+        }
 
         /*
             Calculate the file browser view elements
@@ -362,6 +396,10 @@ public class FullscreenActivity extends AppCompatActivity implements View.OnClic
 
         cWS = new ConfigWebServer(this, appContext);
         cWS.start();
+
+        if(appContext.wg.isEnabled) {
+            ActivityCompat.requestPermissions(this, new String[]{"com.wireguard.android.permission.CONTROL_TUNNELS"}, 1);
+        }
     }
 
 
@@ -467,6 +505,7 @@ public class FullscreenActivity extends AppCompatActivity implements View.OnClic
         binding.btnFtp.setVisibility(View.GONE);
         binding.btnExit.setVisibility(View.GONE);
         binding.statusbar.setVisibility(View.GONE);
+        binding.lblVPN.setVisibility(View.GONE);
         binding.imgWeatherToday.setVisibility(View.GONE);
         binding.imgWeatherTomorrow.setVisibility(View.GONE);
         binding.txtWeatherToday.setVisibility(View.GONE);
@@ -939,6 +978,7 @@ public class FullscreenActivity extends AppCompatActivity implements View.OnClic
         registerReceiver(cfgUpdateReceiver, new IntentFilter(INTENT_CFG_UPDATE));
         registerReceiver(enigma2Receiver, new IntentFilter(INTENT_ENIGMA2));
         registerReceiver(ftpReceiver, new IntentFilter(INTENT_RCV_FILES));
+        registerReceiver(wgMonitor, new IntentFilter(INTENT_WG_MONITOR));
     }
 
     @Override
@@ -948,6 +988,7 @@ public class FullscreenActivity extends AppCompatActivity implements View.OnClic
         unregisterReceiver(cfgUpdateReceiver);
         unregisterReceiver(enigma2Receiver);
         unregisterReceiver(ftpReceiver);
+        unregisterReceiver(wgMonitor);
         super.onStop();
     }
 
@@ -1196,5 +1237,26 @@ public class FullscreenActivity extends AppCompatActivity implements View.OnClic
             }
         }
 
+    }
+
+    public class WgMonitor extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+            if(INTENT_WG_MONITOR.equals(intent.getAction())) {
+                boolean showVPN = intent.getBooleanExtra("showVPN", false);
+                int stationWidth = intent.getIntExtra("stationWidth", 100);
+                if(showVPN && curViewMode==MODE_VIEW_BUTTONS) {
+                    binding.lblVPN.setVisibility(View.VISIBLE);
+                    binding.statusbar.getLayoutParams().width = stationWidth * 7 - 100;
+                }
+                else {
+                    binding.lblVPN.setVisibility(View.GONE);
+                    binding.statusbar.getLayoutParams().width = stationWidth * 7;
+                }
+
+            }
+        }
     }
 }
