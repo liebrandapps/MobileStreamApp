@@ -36,7 +36,7 @@ public class WireGuard {
     public String tunnel;
     public String localNetworks;
     private boolean vpnIsOn;
-    private String remoteHost;
+    public String remoteHost;
 
     public WireGuard() {
         isEnabled = false;
@@ -52,7 +52,7 @@ public class WireGuard {
         int o2 = (int)(ip >> 8 & 0xff);
         int o3 = (int)(ip >> 16 & 0xff);
         int o4 = (int)(ip >> 24 & 0xff);
-        String [] ips = localNetworks.split(":");
+        String [] ips = localNetworks.split(",");
         for(String ipRange : ips) {
             String [] octets = ipRange.trim().split("\\.");
             if(octets.length==4) {
@@ -74,9 +74,10 @@ public class WireGuard {
         }
 
         if(local && vpnIsOn) {
-            //ActivityCompat.requestPermissions(ctx, new String[]{"com.wireguard.android.permission.CONTROL_TUNNELS"}, 1);
             Intent intent = new Intent(INTENT_DOWN);
             intent.putExtra(EXTRA, tunnel);
+            intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+            intent.setPackage("com.wireguard.android");
             ctx.sendBroadcast(intent);
             vpnIsOn = false;
         }
@@ -89,6 +90,16 @@ public class WireGuard {
         intent.setPackage("com.wireguard.android");
         ctx.sendBroadcast(intent);
         vpnIsOn = true;
+    }
+
+    public void disconnectVPN(Context ctx) {
+        if(vpnIsOn) {
+            Intent intent = new Intent(INTENT_DOWN);
+            intent.putExtra(EXTRA, tunnel);
+            intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+            intent.setPackage("com.wireguard.android");
+            ctx.sendBroadcast(intent);
+        }
     }
 
     public void save(SharedPreferences.Editor editor) {

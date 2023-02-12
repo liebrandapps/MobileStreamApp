@@ -9,8 +9,6 @@ package io.liebrand.multistreamapp;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import android.util.Base64;
 import android.util.Log;
 
@@ -28,8 +26,10 @@ import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.NoRouteToHostException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
@@ -47,7 +47,7 @@ public class ConfigWebServer {
     private final Context ctx;
     private final AppContext appCtx;
     private ServerSocket serverSocket;
-    //private Handler handler = new Handler(Looper.getMainLooper());
+    private static boolean isRunning = false;
 
     public ConfigWebServer(Context context, AppContext appContext) {
         ctx = context;
@@ -57,6 +57,7 @@ public class ConfigWebServer {
     }
 
     public void stop() {
+        isRunning = false;
         if (serverSocket != null) {
             try {
                 serverSocket.close();
@@ -67,6 +68,13 @@ public class ConfigWebServer {
     }
 
     public void start() {
+        if(isRunning) return;
+        isRunning = true;
+        try {
+            Thread.sleep(7000);
+        } catch (InterruptedException ignored) {
+        }
+
         assert executor != null;
         executor.execute(() -> {
 
@@ -203,11 +211,17 @@ public class ConfigWebServer {
                         }
                     }).start();
                 }
-            } catch (Exception ex) {
+            } catch(SocketException e) {
+                if(isRunning) {
+                    e.printStackTrace();
+                }
+            }
+            catch (Exception ex) {
                 ex.printStackTrace();
             }
 
         });
+        isRunning = false;
     }
 
     private Map<String, String> getServices() {
@@ -231,7 +245,9 @@ public class ConfigWebServer {
                 e.printStackTrace();
             } catch (MalformedURLException e) {
                 e.printStackTrace();
-            } catch (IOException e) {
+            } catch(NoRouteToHostException e) {
+                Log.i(TAG, String.format("Receiver at %s is either down or not reachable", appCtx.enigma2.receiverIp));
+            } catch(IOException e) {
                 e.printStackTrace();
             }
         }
@@ -385,14 +401,6 @@ public class ConfigWebServer {
                             break;
                         }
                     }
-                }
-                if (tag.equals(AppContext.KEY_LATITUDE)) {
-                    SharedPreferences sPrefs = PreferenceManager.getDefaultSharedPreferences(ctx);
-                    sb.append(String.valueOf(sPrefs.getFloat(AppContext.KEY_LATITUDE, (float) 52.52)));
-                }
-                if (tag.equals(AppContext.KEY_LONGITUDE)) {
-                    SharedPreferences sPrefs = PreferenceManager.getDefaultSharedPreferences(ctx);
-                    sb.append(String.valueOf(sPrefs.getFloat(AppContext.KEY_LONGITUDE, (float) 13.405)));
                 }
             }
             lastIndex = index + 3;

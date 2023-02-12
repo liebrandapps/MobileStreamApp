@@ -16,6 +16,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.Network;
@@ -70,6 +71,7 @@ import io.liebrand.remote.WireguardMonitor;
 
 public class FullscreenActivity extends AppCompatActivity implements View.OnClickListener {
 
+    private static final String TAG = "MSA MainActivity";
     private static final int MODE_VIEW_BUTTONS = 0;
     private static final int MODE_VIEW_ONLY = 1;
     private static final int MODE_FILES = 2;
@@ -190,7 +192,7 @@ public class FullscreenActivity extends AppCompatActivity implements View.OnClic
         enigma2Receiver = new Enigma2Receiver();
         ftpReceiver = new FtpReceiver();
         wgMonitor = new WgMonitor();
-        appContext = new AppContext();
+        appContext = new AppContext(this);
 
         navMap = new HashMap<>();
         arrResIds = new int[]{R.id.station1, R.id.station2, R.id.station3, R.id.station4,
@@ -246,7 +248,6 @@ public class FullscreenActivity extends AppCompatActivity implements View.OnClic
         binding.getRoot().setKeepScreenOn(true);
         binding.getRoot().setOnClickListener(this);
 
-        updateStationTitles(arrResIds);
         /*
             Calculate the layout of the screen when buttons are visible
          */
@@ -343,10 +344,6 @@ public class FullscreenActivity extends AppCompatActivity implements View.OnClic
                 (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         connectivityManager.registerDefaultNetworkCallback(networkCallback);
 
-        if(appContext.wg.isEnabled) {
-            wireguardMonitor = new WireguardMonitor(this, appContext, stationWidth);
-            wireguardMonitor.start();
-        }
 
         /*
             Calculate the file browser view elements
@@ -394,11 +391,10 @@ public class FullscreenActivity extends AppCompatActivity implements View.OnClic
         hideWhenReady = false;
         mContentView = binding.fullScreenVideo;
 
-        cWS = new ConfigWebServer(this, appContext);
-        cWS.start();
-
         if(appContext.wg.isEnabled) {
-            ActivityCompat.requestPermissions(this, new String[]{"com.wireguard.android.permission.CONTROL_TUNNELS"}, 1);
+            if(ActivityCompat.checkSelfPermission(this, "com.wireguard.android.permission.CONTROL_TUNNELS")!= PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, new String[]{"com.wireguard.android.permission.CONTROL_TUNNELS"}, 1);
+            }
         }
     }
 
@@ -542,9 +538,6 @@ public class FullscreenActivity extends AppCompatActivity implements View.OnClic
             binding.imgSunset.setVisibility(View.VISIBLE);
             binding.txtSunrise.setVisibility(View.VISIBLE);
             binding.txtSunset.setVisibility(View.VISIBLE);
-            /* update weather info */
-            EnvHandler envHandler = new EnvHandler(this);
-            envHandler.start();
         }
 
         if(showFiles) {
@@ -972,6 +965,7 @@ public class FullscreenActivity extends AppCompatActivity implements View.OnClic
 
     @Override
     protected void onStart() {
+        Log.i(TAG, "onStart");
         super.onStart();
         registerReceiver(m3u8Reveiver, new IntentFilter(INTENT_LOAD_M3U8));
         registerReceiver(envDataReceiver, new IntentFilter(INTENT_ENV));
@@ -983,6 +977,7 @@ public class FullscreenActivity extends AppCompatActivity implements View.OnClic
 
     @Override
     protected void onStop() {
+        Log.i(TAG, "onStop");
         unregisterReceiver(m3u8Reveiver);
         unregisterReceiver(envDataReceiver);
         unregisterReceiver(cfgUpdateReceiver);
@@ -994,13 +989,33 @@ public class FullscreenActivity extends AppCompatActivity implements View.OnClic
 
     @Override
     protected void onPause() {
+        Log.i(TAG, "onPause");
         if(mPlayer!=null) {
             mPlayer.stop();
             mPlayer.release();
             changeMode(MODE_VIEW_BUTTONS);
             mPlayer = null;
         }
+        if(wireguardMonitor!=null) {
+            appContext.wg.disconnectVPN(this);
+            wireguardMonitor.terminate();
+        }
+        appContext.envHandler.terminate();
+        appContext.configWebServer.stop();
         super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        Log.i(TAG, "onResume");
+        if(appContext.wg.isEnabled) {
+            wireguardMonitor = new WireguardMonitor(this, appContext);
+            wireguardMonitor.start();
+        }
+        appContext.envHandler = new EnvHandler(this, appContext);
+        appContext.envHandler.start();
+        appContext.configWebServer.start();
+        super.onResume();
     }
 
     private void showFtpFiles(int newTopIndex) {
@@ -1245,10 +1260,14 @@ public class FullscreenActivity extends AppCompatActivity implements View.OnClic
         public void onReceive(Context context, Intent intent) {
 
             if(INTENT_WG_MONITOR.equals(intent.getAction())) {
+                DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
                 boolean showVPN = intent.getBooleanExtra("showVPN", false);
-                int stationWidth = intent.getIntExtra("stationWidth", 100);
+                float dpWidth = displayMetrics.widthPixels; // / displayMetrics.density;
+                int stationWidth = (int) Math.abs(dpWidth / 8);
+
                 if(showVPN && curViewMode==MODE_VIEW_BUTTONS) {
                     binding.lblVPN.setVisibility(View.VISIBLE);
+
                     binding.statusbar.getLayoutParams().width = stationWidth * 7 - 100;
                 }
                 else {

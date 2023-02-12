@@ -37,6 +37,8 @@ public class Configuration {
     private static final String SECTION_GENERAL = "general";
     private static final String FTP_COUNT = "ftpServerCount";
     private static final String STATION_COUNT = "stationCount";
+    private static final String KEY_LONGITUDE = "longitude";
+    private static final String KEY_LATITUDE = "latitude";
     private static final String SECTION_STATION = "station_%d";
 
 
@@ -47,12 +49,16 @@ public class Configuration {
 
     public HashMap<Integer, FTPConfiguration> ftpServerList;
 
-    private AppContext appContext;
+    private final AppContext appContext;
+
+    public float longitude, latitude;
 
     public Configuration(AppContext appContext) {
         ftpServerList = new HashMap<>();
         stationMap = new HashMap<>();
         this.appContext = appContext;
+        longitude = (float)13.405;
+        latitude = (float)52.52;
     }
 
     public boolean configExists(SharedPreferences sPrefs) {
@@ -77,6 +83,8 @@ public class Configuration {
         }
         appContext.enigma2.load(sPrefs);
         appContext.wg.load(sPrefs);
+        longitude = sPrefs.getFloat(KEY_LONGITUDE, longitude);
+        latitude = sPrefs.getFloat(KEY_LATITUDE, latitude);
     }
 
     public void save(SharedPreferences sPrefs) {
@@ -90,6 +98,8 @@ public class Configuration {
        }
        editor.putInt(STATION_COUNT, stationMap.size());
        editor.putInt(FTP_COUNT, ftpServerList.size());
+       editor.putFloat(KEY_LONGITUDE, longitude);
+       editor.putFloat(KEY_LATITUDE, latitude);
        appContext.enigma2.save(editor);
        appContext.wg.save(editor);
 
@@ -107,6 +117,9 @@ public class Configuration {
         addSection(SECTION_GENERAL, sb);
         addKeyValue(FTP_COUNT, ftpServerList.size(), sb);
         addKeyValue(STATION_COUNT, stationMap.size(), sb);
+        addComment("Enter longitude / latitude for whether information", sb);
+        addKeyValue(KEY_LONGITUDE, longitude, sb);
+        addKeyValue(KEY_LATITUDE, latitude, sb);
         sb.append("\n");
 
         index = 1;
@@ -147,6 +160,13 @@ public class Configuration {
     }
 
     public static void addKeyValue(String key, int value, StringBuilder sb) {
+        sb.append(key);
+        sb.append("=");
+        sb.append(value);
+        sb.append("\n");
+    }
+
+    public static void addKeyValue(String key, float value, StringBuilder sb) {
         sb.append(key);
         sb.append("=");
         sb.append(value);
@@ -238,6 +258,7 @@ public class Configuration {
             appContext.wg.isEnabled = convertToBoolean(mapWg.getOrDefault(WireGuard.ENABLE, "no"));
             appContext.wg.tunnel = mapWg.get(WireGuard.TUNNEL);
             appContext.wg.localNetworks = mapWg.get(WireGuard.LOCAL_NETWORKS);
+            appContext.wg.remoteHost = mapWg.get(WireGuard.REMOTE_HOST);
         }
     }
 
