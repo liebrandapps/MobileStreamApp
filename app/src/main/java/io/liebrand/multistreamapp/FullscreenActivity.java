@@ -67,6 +67,9 @@ import java.util.Objects;
 
 import io.liebrand.exoplayer2.ExDataSource;
 import io.liebrand.multistreamapp.databinding.ActivityFullscreenBinding;
+import io.liebrand.remote.Enigma2Handler;
+import io.liebrand.remote.FritzBoxMonitor;
+import io.liebrand.remote.PowerplugMonitor;
 import io.liebrand.remote.WireguardMonitor;
 
 public class FullscreenActivity extends AppCompatActivity implements View.OnClickListener {
@@ -148,6 +151,7 @@ public class FullscreenActivity extends AppCompatActivity implements View.OnClic
     public static final String XTRA_ICONTOMORROW = "iconTomorrow";
     public static final String INTENT_CFG_UPDATE ="configUpdate";
     public final static String INTENT_ENIGMA2 = "enigma2";
+    public final static String INTENT_ENIGMA2_AVAIL = "enigma2available";
     public final static String INTENT_RCV_FILES = "ftpFilesReceived";
     public final static String INTENT_WG_MONITOR = "wgMonitor";
 
@@ -172,6 +176,8 @@ public class FullscreenActivity extends AppCompatActivity implements View.OnClic
     private ActivityFullscreenBinding binding;
     private ConfigWebServer cWS;
     private WireguardMonitor wireguardMonitor;
+    private FritzBoxMonitor fritzBoxMonitor;
+    private PowerplugMonitor powerplugMonitor;
     int [] arrResIds;
     int [] arrFtpResIds;
     int [] arrFtpExtraResIds;
@@ -971,6 +977,7 @@ public class FullscreenActivity extends AppCompatActivity implements View.OnClic
         registerReceiver(envDataReceiver, new IntentFilter(INTENT_ENV));
         registerReceiver(cfgUpdateReceiver, new IntentFilter(INTENT_CFG_UPDATE));
         registerReceiver(enigma2Receiver, new IntentFilter(INTENT_ENIGMA2));
+        registerReceiver(enigma2Receiver, new IntentFilter(INTENT_ENIGMA2_AVAIL));
         registerReceiver(ftpReceiver, new IntentFilter(INTENT_RCV_FILES));
         registerReceiver(wgMonitor, new IntentFilter(INTENT_WG_MONITOR));
     }
@@ -999,6 +1006,15 @@ public class FullscreenActivity extends AppCompatActivity implements View.OnClic
         if(wireguardMonitor!=null) {
             appContext.wg.disconnectVPN(this);
             wireguardMonitor.terminate();
+            wireguardMonitor = null;
+        }
+        if(fritzBoxMonitor!=null) {
+            fritzBoxMonitor.terminate();
+            fritzBoxMonitor = null;
+        }
+        if(powerplugMonitor!=null) {
+            powerplugMonitor.terminate();
+            powerplugMonitor = null;
         }
         appContext.envHandler.terminate();
         appContext.configWebServer.stop();
@@ -1011,6 +1027,14 @@ public class FullscreenActivity extends AppCompatActivity implements View.OnClic
         if(appContext.wg.isEnabled) {
             wireguardMonitor = new WireguardMonitor(this, appContext);
             wireguardMonitor.start();
+        }
+        if(appContext.fritzBox.isEnabled) {
+            fritzBoxMonitor = new FritzBoxMonitor(this, appContext);
+            fritzBoxMonitor.start();
+        }
+        if(appContext.powerPlug.isEnabled) {
+            powerplugMonitor = new PowerplugMonitor(this, appContext);
+            powerplugMonitor.start();
         }
         appContext.envHandler = new EnvHandler(this, appContext);
         appContext.envHandler.start();
@@ -1226,7 +1250,14 @@ public class FullscreenActivity extends AppCompatActivity implements View.OnClic
         public void onReceive(Context context, Intent intent) {
 
             if(INTENT_ENIGMA2.equals(intent.getAction())) {
+                String status = intent.getStringExtra("status");
+                if ("fail".equals(status)) {
+                    String message = intent.getStringExtra("message");
+                    Toast.makeText(FullscreenActivity.this, message, Toast.LENGTH_LONG).show();
+                    return;
+                }
                 String title = intent.getStringExtra("now:title");
+                if(title==null) return;
                 String start = intent.getStringExtra("now:start");
                 int unixtime = Integer.parseInt(intent.getStringExtra("now:unixtime"));
                 int duration = Integer.parseInt(intent.getStringExtra("now:duration"));
@@ -1249,6 +1280,11 @@ public class FullscreenActivity extends AppCompatActivity implements View.OnClic
                 toast.setView(view);
                 toast.setDuration(Toast.LENGTH_LONG);
                 toast.show();
+            }
+
+            if(INTENT_ENIGMA2_AVAIL.equals(intent.getAction())) {
+                String msg = intent.getStringExtra("msg");
+                Toast.makeText(FullscreenActivity.this, msg, Toast.LENGTH_LONG).show();
             }
         }
 

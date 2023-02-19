@@ -12,6 +12,9 @@ import android.content.Context;
 import java.util.HashMap;
 import java.util.Map;
 
+import io.liebrand.remote.Enigma2;
+import io.liebrand.remote.FritzBox;
+import io.liebrand.remote.Powerplug;
 import io.liebrand.remote.WireGuard;
 
 public class AppContext {
@@ -23,6 +26,8 @@ public class AppContext {
     public WireGuard wg;
     public EnvHandler envHandler;
     public ConfigWebServer configWebServer;
+    public FritzBox fritzBox;
+    public Powerplug powerPlug;
 
     public AppContext(Context context) {
         configuration = new Configuration(this);
@@ -31,6 +36,8 @@ public class AppContext {
         wg = new WireGuard();
         envHandler = new EnvHandler(context, this);
         configWebServer = new ConfigWebServer(context, this);
+        fritzBox = new FritzBox(context);
+        powerPlug = new Powerplug();
     }
 
 }

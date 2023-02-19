@@ -1,4 +1,4 @@
-package io.liebrand.multistreamapp;
+package io.liebrand.remote;
 
 /*
   Mark Liebrand 2023
@@ -30,6 +30,10 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import io.liebrand.multistreamapp.AppContext;
+import io.liebrand.multistreamapp.FullscreenActivity;
+import io.liebrand.multistreamapp.Station;
+
 public class Enigma2Handler extends Thread {
     private static final String TAG = "E2HDL";
 
@@ -38,9 +42,9 @@ public class Enigma2Handler extends Thread {
     private static final String TAG_TITLE = "e2eventtitle";
     private static final String TAG_START = "e2eventstart";
     private static final String TAG_DURATION = "e2eventduration";
-    private Enigma2 enigma2;
-    private Station s;
-    private Context ctx;
+    private final Enigma2 enigma2;
+    private final Station s;
+    private final Context ctx;
 
     public Enigma2Handler(Context context, AppContext appCtx, Station s) {
         this.enigma2 = appCtx.enigma2;
@@ -54,7 +58,7 @@ public class Enigma2Handler extends Thread {
         boolean fail = false;
         if(s.serviceId==null || s.serviceId.length()==0) {
             result.put("status", "fail");
-            result.put("message", String.format("no serviceId configure for %s", s.text));
+            result.put("message", String.format("no serviceId configured for %s", s.text));
             fail = true;
         }
         if(!fail) {
@@ -68,7 +72,7 @@ public class Enigma2Handler extends Thread {
         }
         if(!enigma2.isEnabled) {
             result.put("status", "fail");
-            result.put("message", String.format("enigma2 interface is disabled.", s.text));
+            result.put("message", String.format("enigma2 interface is disabled for %s.", s.text));
             fail = true;
 
         }
@@ -124,7 +128,7 @@ public class Enigma2Handler extends Thread {
             factory.setNamespaceAware(true);
             XmlPullParser xpp = factory.newPullParser();
 
-            xpp.setInput( new InputStreamReader( inputStream) ); // pass input whatever xml you have
+            xpp.setInput( new InputStreamReader( inputStream) );
             int eventType = xpp.getEventType();
             while (eventType != XmlPullParser.END_DOCUMENT) {
                 if(eventType == XmlPullParser.START_TAG) {
@@ -137,7 +141,8 @@ public class Enigma2Handler extends Thread {
                 } else if(eventType == XmlPullParser.END_TAG) {
                     if(xpp.getName().equals(TAG_EVENT)) {
                         if(tmpMap!=null && tmpMap.containsKey(TAG_REFERENCE) && tmpMap.get(TAG_REFERENCE).equals(s.serviceId)) {
-                            Date startTime = new Date(Integer.parseInt(tmpMap.get(TAG_START)));
+                            Date startTime = new Date(Long.parseLong(tmpMap.get(TAG_START))*1000);
+                            Log.d(TAG, tmpMap.get(TAG_START) );
                             SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
                             kvMap.put(tag+ ":title", tmpMap.get(TAG_TITLE));
                             kvMap.put(tag + ":start", sdf.format(startTime));
@@ -161,9 +166,7 @@ public class Enigma2Handler extends Thread {
                 eventType = xpp.next();
             }
 
-        } catch (XmlPullParserException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        } catch (XmlPullParserException | IOException e) {
             e.printStackTrace();
         }
     }

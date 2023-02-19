@@ -17,6 +17,9 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import io.liebrand.remote.Enigma2;
+import io.liebrand.remote.FritzBox;
+import io.liebrand.remote.Powerplug;
 import io.liebrand.remote.WireGuard;
 
 
@@ -83,6 +86,8 @@ public class Configuration {
         }
         appContext.enigma2.load(sPrefs);
         appContext.wg.load(sPrefs);
+        appContext.fritzBox.load(sPrefs);
+        appContext.powerPlug.load(sPrefs);
         longitude = sPrefs.getFloat(KEY_LONGITUDE, longitude);
         latitude = sPrefs.getFloat(KEY_LATITUDE, latitude);
     }
@@ -102,6 +107,10 @@ public class Configuration {
        editor.putFloat(KEY_LATITUDE, latitude);
        appContext.enigma2.save(editor);
        appContext.wg.save(editor);
+       appContext.fritzBox.save(editor);
+       appContext.powerPlug.save(editor);
+       editor.putFloat(KEY_LONGITUDE, longitude);
+       editor.putFloat(KEY_LATITUDE, latitude);
 
        DateFormat df = DateFormat.getDateTimeInstance();
        String now = df.format(new Date());
@@ -142,7 +151,12 @@ public class Configuration {
         sb.append("\n");
         addSection(WireGuard.SECTION, sb);
         appContext.wg.exportToIni(sb);
-
+        sb.append("\n");
+        addSection(FritzBox.SECTION, sb);
+        appContext.fritzBox.exportToIni(sb);
+        sb.append("\n");
+        addSection(Powerplug.SECTION, sb);
+        appContext.powerPlug.exportToIni(sb);
         return sb.toString();
     }
 
@@ -247,18 +261,19 @@ public class Configuration {
         }
         Map<String, String> mapEnigma2 = entries.get(Enigma2.SECTION);
         if(mapEnigma2!=null) {
-            appContext.enigma2.isEnabled = convertToBoolean(mapEnigma2.getOrDefault(Enigma2.ENABLE, "no"));
-            appContext.enigma2.receiverIp = mapEnigma2.get(Enigma2.RECEIVERIP);
-            appContext.enigma2.user = mapEnigma2.getOrDefault(Enigma2.USER, "");
-            appContext.enigma2.password = mapEnigma2.getOrDefault(Enigma2.PASSWORD, "");
-            appContext.enigma2.vpnbypass = mapEnigma2.getOrDefault(Enigma2.VPNBYPASS, "");
+            appContext.enigma2.importFromIni(mapEnigma2);
         }
         Map<String, String> mapWg = entries.get(WireGuard.SECTION);
         if(mapWg!=null) {
-            appContext.wg.isEnabled = convertToBoolean(mapWg.getOrDefault(WireGuard.ENABLE, "no"));
-            appContext.wg.tunnel = mapWg.get(WireGuard.TUNNEL);
-            appContext.wg.localNetworks = mapWg.get(WireGuard.LOCAL_NETWORKS);
-            appContext.wg.remoteHost = mapWg.get(WireGuard.REMOTE_HOST);
+            appContext.wg.importFromIni(mapWg);
+        }
+        Map<String, String> mapFb = entries.get(FritzBox.SECTION);
+        if(mapFb!=null) {
+            appContext.fritzBox.importFromIni(mapFb);
+        }
+        Map<String, String> mapPp = entries.get(Powerplug.SECTION);
+        if(mapPp!=null) {
+            appContext.powerPlug.importFromIni(mapPp);
         }
     }
 
@@ -282,7 +297,7 @@ public class Configuration {
         return ftpServerList.get(index);
     }
 
-    private static boolean convertToBoolean(String value) {
+    public static boolean convertToBoolean(String value) {
         return "1".equalsIgnoreCase(value) || "yes".equalsIgnoreCase(value) ||
                 "true".equalsIgnoreCase(value) || "on".equalsIgnoreCase(value);
     }

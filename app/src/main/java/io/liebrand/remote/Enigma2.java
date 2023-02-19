@@ -1,4 +1,4 @@
-package io.liebrand.multistreamapp;
+package io.liebrand.remote;
 
 /*
   Mark Liebrand 2023
@@ -9,7 +9,12 @@ package io.liebrand.multistreamapp;
 
 import android.content.SharedPreferences;
 
-public class Enigma2 {
+import java.util.Map;
+
+import io.liebrand.multistreamapp.Configurable;
+import io.liebrand.multistreamapp.Configuration;
+
+public class Enigma2 implements Configurable {
 
     public static final String SECTION = "enigma2";
     public static final String ENABLE = "enable";
@@ -73,7 +78,14 @@ public class Enigma2 {
         }
     }
 
-
+    @Override
+    public void importFromIni(Map<String, String> map) {
+        isEnabled = Configuration.convertToBoolean(map.getOrDefault(Enigma2.ENABLE, "no"));
+        receiverIp = map.get(Enigma2.RECEIVERIP);
+        user = map.getOrDefault(Enigma2.USER, "");
+        password = map.getOrDefault(Enigma2.PASSWORD, "");
+        vpnbypass = map.getOrDefault(Enigma2.VPNBYPASS, "");
+    }
 
 
 }

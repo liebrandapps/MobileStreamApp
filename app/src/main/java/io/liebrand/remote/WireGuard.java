@@ -14,10 +14,12 @@ import android.util.Log;
 
 import java.io.IOException;
 import java.net.InetAddress;
+import java.util.Map;
 
+import io.liebrand.multistreamapp.Configurable;
 import io.liebrand.multistreamapp.Configuration;
 
-public class WireGuard {
+public class WireGuard implements Configurable {
 
     private static final String TAG = "WIREGUARD";
 
@@ -102,6 +104,7 @@ public class WireGuard {
         }
     }
 
+    @Override
     public void save(SharedPreferences.Editor editor) {
         editor.putBoolean(SECTION + ":" + ENABLE, isEnabled);
         editor.putString(SECTION + ":" + TUNNEL, tunnel);
@@ -109,6 +112,7 @@ public class WireGuard {
         editor.putString(SECTION+":" + REMOTE_HOST, remoteHost);
     }
 
+    @Override
     public void load(SharedPreferences sPrefs) {
         isEnabled = sPrefs.getBoolean(SECTION + ":" + ENABLE, false);
         tunnel = sPrefs.getString(SECTION+":"+ TUNNEL, "");
@@ -116,6 +120,7 @@ public class WireGuard {
         remoteHost = sPrefs.getString(SECTION + ":" + REMOTE_HOST, "");
     }
 
+    @Override
     public void exportToIni(StringBuilder sb) {
         Configuration.addComment("This can be configured to turn on Wireguard VPN in case the beamer is not in a local network", sb);
         Configuration.addComment("WireGuard App needs to be installed and configured on the device", sb);
@@ -129,6 +134,14 @@ public class WireGuard {
         Configuration.addComment("Specify an IP address that can be pinged successfully, when VPN is active", sb);
         Configuration.addComment("For example specify the address of your router at home", sb);
         Configuration.addKeyValue(REMOTE_HOST, remoteHost, sb);
+    }
+
+    @Override
+    public void importFromIni(Map<String, String> map) {
+        isEnabled = Configuration.convertToBoolean(map.getOrDefault(WireGuard.ENABLE, "no"));
+        tunnel = map.get(WireGuard.TUNNEL);
+        localNetworks = map.get(WireGuard.LOCAL_NETWORKS);
+        remoteHost = map.get(WireGuard.REMOTE_HOST);
     }
 
     public boolean vpnActive() {
