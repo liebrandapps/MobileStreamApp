@@ -7,6 +7,8 @@ package io.liebrand.remote;
   See file LICENSE or go to for full license details https://github.com/liebrandapps/MobileStreamApp
  */
 
+import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.util.Log;
@@ -20,10 +22,12 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.InetAddress;
 import java.net.URL;
+import java.util.Locale;
 import java.util.Map;
 
 import io.liebrand.multistreamapp.Configurable;
 import io.liebrand.multistreamapp.Configuration;
+import io.liebrand.multistreamapp.FullscreenActivity;
 
 /**
  * This class implements an interface to a powerplug with measurement for power consumption
@@ -36,6 +40,7 @@ public class Powerplug implements Configurable {
 
     public static final String SECTION = "Powerplug";
     private static final String ENABLE = "enable";
+    private static final String USEWOL = "useWoL";
     private static final String PLUGIP = "plugIp";
     private static final String POWERCYCLETIME = "powerCycleTime";
     private static final String CONSIDERWOL = "considerWoL";
@@ -45,12 +50,16 @@ public class Powerplug implements Configurable {
     private static final String URL_ONOFF = "http://%s/cm?cmnd=Power %s";
 
     public boolean isEnabled;
+    public boolean useWoL;
     private String plugIp;
     private int powerCycleTime;
+    private Context context;
 
 
-    public Powerplug() {
+    public Powerplug(Context context) {
+        this.context = context;
         isEnabled = false;
+        useWoL = false;
         powerCycleTime = DEFAULT_CYCLE_FILE;
         plugIp = "";
     }
@@ -110,6 +119,9 @@ public class Powerplug implements Configurable {
 
     public boolean switchPower(boolean on) {
         try {
+            Intent intent = new Intent(FullscreenActivity.INTENT_ENIGMA2_STATUS);
+            intent.putExtra("msg", String.format(Locale.ENGLISH, "Powerplug: Turning %s", on? "on" : "off"));
+            context.sendBroadcast(intent);
             URL url = new URL(String.format(URL_ONOFF, plugIp, on? "on" : "off"));
             HttpURLConnection urlConn = (HttpURLConnection) url.openConnection();
             int responseCode = urlConn.getResponseCode();
@@ -124,12 +136,19 @@ public class Powerplug implements Configurable {
 
 
     public void doPowerCycle() {
-        new PowerTask().execute();
+        if(isEnabled) {
+            new PowerTask().execute();
+        }
+    }
+
+    public int getPowerCycleTime() {
+        return powerCycleTime;
     }
 
     @Override
     public void save(SharedPreferences.Editor editor) {
         editor.putBoolean(ENABLE, isEnabled);
+        editor.putBoolean(USEWOL, useWoL);
         editor.putString(PLUGIP, plugIp);
         editor.putInt(POWERCYCLETIME, powerCycleTime);
     }
@@ -137,6 +156,7 @@ public class Powerplug implements Configurable {
     @Override
     public void load(SharedPreferences sPrefs) {
         isEnabled = sPrefs.getBoolean(ENABLE, isEnabled);
+        useWoL = sPrefs.getBoolean(USEWOL, useWoL);
         plugIp = sPrefs.getString(PLUGIP, plugIp);
         powerCycleTime = sPrefs.getInt(POWERCYCLETIME, powerCycleTime);
     }
@@ -145,6 +165,9 @@ public class Powerplug implements Configurable {
     public void exportToIni(StringBuilder sb) {
         Configuration.addComment("Default is no - do not use plug", sb);
         Configuration.addKeyValue(ENABLE, isEnabled? "yes" : "no", sb);
+        Configuration.addComment("useWoL gives priority to the WoL configured in the FritzBox section", sb);
+        Configuration.addComment("This setting only makes sense, if the WoL is configured in this app", sb);
+        Configuration.addKeyValue(USEWOL, useWoL? "yes" : "no", sb);
         Configuration.addComment("IP of the plug", sb);
         Configuration.addKeyValue(PLUGIP, plugIp, sb);
         Configuration.addComment("Time in seconds for power cycle OFF ...wait(x seconds) ... ON", sb);
@@ -154,6 +177,7 @@ public class Powerplug implements Configurable {
     @Override
     public void importFromIni(Map<String, String> map) {
         isEnabled = Configuration.convertToBoolean(map.getOrDefault(ENABLE, "no"));
+        useWoL = Configuration.convertToBoolean(map.getOrDefault(USEWOL, "no"));
         plugIp = map.get(PLUGIP);
         powerCycleTime = Integer.parseInt(map.get(POWERCYCLETIME));
     }

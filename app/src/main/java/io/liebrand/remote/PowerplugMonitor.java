@@ -14,13 +14,11 @@ public class PowerplugMonitor extends Thread {
     private final AppContext appContext;
     private static boolean isRunning = false;
     private boolean terminate = false;
-    private boolean logReachbility;
 
     public PowerplugMonitor(Context context, AppContext appContext) {
         ctx = context;
         this.appContext = appContext;
         terminate = false;
-        logReachbility = false;
     }
 
     @Override
@@ -34,13 +32,15 @@ public class PowerplugMonitor extends Thread {
         Log.i(TAG, String.format("Starting %s", TAG));
         terminate = false;
         String msg;
+        int addlSleepTime;
         while (!terminate) {
+            addlSleepTime = 0;
             Powerplug.PlugStatus plugStatus = appContext.powerPlug.getStatus();
             if(plugStatus.isReachable) {
                 if(!plugStatus.powerOn) {
                     msg = "Powerplug is turned off, going to turn on";
-                    Intent intent = new Intent(FullscreenActivity.INTENT_ENIGMA2);
-                    intent.putExtra("message", msg);
+                    Intent intent = new Intent(FullscreenActivity.INTENT_ENIGMA2_STATUS);
+                    intent.putExtra("msg", msg);
                     ctx.sendBroadcast(intent);
                     Log.i(TAG, msg);
                     appContext.powerPlug.switchPower(true);
@@ -49,13 +49,14 @@ public class PowerplugMonitor extends Thread {
                     if(!plugStatus.isRunning) {
                         msg = "Powerplug is on, receiver seems to be off, doing a power cycle.";
                         appContext.powerPlug.doPowerCycle();
+                        addlSleepTime = appContext.powerPlug.getPowerCycleTime();
                     }
                     else { /* Plug is ON and Receiver is consuming power */
                         msg = "Powerplug is on, Receiver is possibly sleeping, nothing to do.";
                         terminate = true;
                     }
-                    Intent intent = new Intent(FullscreenActivity.INTENT_ENIGMA2);
-                    intent.putExtra("message", msg);
+                    Intent intent = new Intent(FullscreenActivity.INTENT_ENIGMA2_STATUS);
+                    intent.putExtra("msg", msg);
                     ctx.sendBroadcast(intent);
                     Log.i(TAG, msg);
                 }
@@ -68,17 +69,15 @@ public class PowerplugMonitor extends Thread {
                 else {
                     msg = "Powerplug is not reachable, waiting for VPN. Will try again in 30 seconds.";
                 }
-                if(!logReachbility) {
-                    Intent intent = new Intent(FullscreenActivity.INTENT_ENIGMA2);
-                    intent.putExtra("message", msg);
-                    ctx.sendBroadcast(intent);
-                    Log.w(TAG, msg);
-                }
-                logReachbility = true;
+
+                Intent intent = new Intent(FullscreenActivity.INTENT_ENIGMA2_STATUS);
+                intent.putExtra("msg", msg);
+                ctx.sendBroadcast(intent);
+                Log.w(TAG, msg);
             }
 
             try {
-                sleep(30000);
+                sleep(30000 + (addlSleepTime * 1000));
             } catch (InterruptedException ignored) {
 
             }

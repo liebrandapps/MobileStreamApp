@@ -8,11 +8,14 @@ package io.liebrand.remote;
  */
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 
 import java.util.Date;
+import java.util.Locale;
 
 import io.liebrand.multistreamapp.AppContext;
+import io.liebrand.multistreamapp.FullscreenActivity;
 
 public class FritzBoxMonitor extends Thread {
     private static final String TAG = "FritzboxMonitor";
@@ -39,19 +42,32 @@ public class FritzBoxMonitor extends Thread {
         Log.i(TAG, "Starting FritzboxMonitor");
         terminate = false;
         Date startTime = new Date();
+        int trycount = 0;
         while(!terminate) {
-            if(appContext.fritzBox.isReachable()) {
-                break;
-            }
-            Date currentTime = new Date();
-            if (((currentTime.getTime() - startTime.getTime())/1000)>90) {
-                if(appContext.powerPlug.isEnabled) {
-                    Log.i(TAG, "WoL seems to be not successful, trying power cycle");
-                    appContext.powerPlug.doPowerCycle();
+            if(appContext.fritzBox.isNetworkAvailable()) {
+                if (appContext.fritzBox.isReachable()) {
+                    Intent intent = new Intent(FullscreenActivity.INTENT_ENIGMA2_STATUS);
+                    intent.putExtra("msg", "Receiver is available");
+                    ctx.sendBroadcast(intent);
+                    break;
                 }
+                Date currentTime = new Date();
+                if ((trycount == 3) && appContext.powerPlug.isEnabled) {
+                    String msg = "WoL seems to be not successful, trying power cycle";
+                    Log.i(TAG, msg);
+                    appContext.powerPlug.doPowerCycle();
+                    Intent intent = new Intent(FullscreenActivity.INTENT_ENIGMA2_STATUS);
+                    intent.putExtra("msg", msg);
+                    ctx.sendBroadcast(intent);
+                }
+                else {
+                    appContext.fritzBox.wakeup();
+                }
+                trycount += 1;
+                Intent intent = new Intent(FullscreenActivity.INTENT_ENIGMA2_STATUS);
+                intent.putExtra("msg", String.format(Locale.ENGLISH,  "Trying to wakeup receiver [%d]", trycount));
+                ctx.sendBroadcast(intent);
             }
-            appContext.fritzBox.wakeup();
-
             try {
                 sleep(30000);
             } catch (InterruptedException ignored) {

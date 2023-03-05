@@ -37,7 +37,7 @@ public class AppContext {
         envHandler = new EnvHandler(context, this);
         configWebServer = new ConfigWebServer(context, this);
         fritzBox = new FritzBox(context);
-        powerPlug = new Powerplug();
+        powerPlug = new Powerplug(context);
     }
 
 }

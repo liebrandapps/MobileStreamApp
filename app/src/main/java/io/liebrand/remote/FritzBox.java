@@ -75,6 +75,7 @@ public class FritzBox implements Configurable {
     private boolean statusChanged;
     private boolean msgShown1;
     private boolean msgShown2;
+    private boolean isNetworkAvailable;
 
     public FritzBox(Context ctx) {
         isEnabled = false;
@@ -82,6 +83,15 @@ public class FritzBox implements Configurable {
         statusChanged = false;
         msgShown1 = false;
         msgShown2 = false;
+        isNetworkAvailable = false;
+    }
+
+    public void setNetworkStatus(boolean available) {
+        isNetworkAvailable = available;
+    }
+
+    public boolean isNetworkAvailable() {
+        return isNetworkAvailable;
     }
 
     public boolean isReachable() {
@@ -117,7 +127,7 @@ public class FritzBox implements Configurable {
             String msg = "Receiver is running, no need to wake up";
             Log.i(TAG, msg);
             if(statusChanged) {
-                Intent intent = new Intent(FullscreenActivity.INTENT_ENIGMA2);
+                Intent intent = new Intent(FullscreenActivity.INTENT_ENIGMA2_AVAIL);
                 intent.putExtra("message", msg);
                 ctx.sendBroadcast(intent);
             }
@@ -136,8 +146,8 @@ public class FritzBox implements Configurable {
                         receiverHost, boxIp);
                 Log.i(TAG, msg);
                 if(!msgShown1) {
-                    Intent intent = new Intent(FullscreenActivity.INTENT_ENIGMA2);
-                    intent.putExtra("message", msg);
+                    Intent intent = new Intent(FullscreenActivity.INTENT_ENIGMA2_STATUS);
+                    intent.putExtra("msg", msg);
                     ctx.sendBroadcast(intent);
                     msgShown1 = true;
                 }
@@ -146,8 +156,8 @@ public class FritzBox implements Configurable {
             if(!msgShown2) {
                 String msg = "Receiver is not reachable, trying to wakeup, please be patient";
                 Log.i(TAG, msg);
-                Intent intent = new Intent(FullscreenActivity.INTENT_ENIGMA2);
-                intent.putExtra("message", msg);
+                Intent intent = new Intent(FullscreenActivity.INTENT_ENIGMA2_STATUS);
+                intent.putExtra("msg", msg);
                 ctx.sendBroadcast(intent);
                 msgShown2 = true;
             }

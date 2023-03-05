@@ -62,6 +62,7 @@ import com.google.android.exoplayer2.upstream.DefaultHttpDataSource;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 
@@ -152,14 +153,17 @@ public class FullscreenActivity extends AppCompatActivity implements View.OnClic
     public static final String INTENT_CFG_UPDATE ="configUpdate";
     public final static String INTENT_ENIGMA2 = "enigma2";
     public final static String INTENT_ENIGMA2_AVAIL = "enigma2available";
+    public final static String INTENT_ENIGMA2_STATUS = "enigma2status";
     public final static String INTENT_RCV_FILES = "ftpFilesReceived";
     public final static String INTENT_WG_MONITOR = "wgMonitor";
+    public final static String INTENT_STATUS_UPDATE = "statusUpdate";
 
     private EnvDataReceiver envDataReceiver;
     private ConfigUpdateReceiver cfgUpdateReceiver;
     private Enigma2Receiver enigma2Receiver;
     private FtpReceiver ftpReceiver;
     private WgMonitor wgMonitor;
+    private StatusUpdateReceiver statusUpdateReceiver;
 
     private AppContext appContext;
     private Station curStation;
@@ -198,6 +202,7 @@ public class FullscreenActivity extends AppCompatActivity implements View.OnClic
         enigma2Receiver = new Enigma2Receiver();
         ftpReceiver = new FtpReceiver();
         wgMonitor = new WgMonitor();
+        statusUpdateReceiver = new StatusUpdateReceiver();
         appContext = new AppContext(this);
 
         navMap = new HashMap<>();
@@ -336,14 +341,22 @@ public class FullscreenActivity extends AppCompatActivity implements View.OnClic
                 WifiInfo wifiInfo = wifi.getConnectionInfo();
                 int level = WifiManager.calculateSignalLevel(wifiInfo.getRssi(), levels);
                 int ip = wifi.getConnectionInfo().getIpAddress();
-                String ipStrg = String.format("%d.%d.%d.%d", (ip & 0xff), (ip >> 8 & 0xff), (ip >> 16 & 0xff), (ip >> 24 & 0xff));
-                binding.statusbar.setText(String.format("Press 'OK' to start streaming [Wifi Strength is %d %%, IP %s]", level, ipStrg));
+                String ipStrg = String.format(Locale.ENGLISH, "%d.%d.%d.%d", (ip & 0xff), (ip >> 8 & 0xff), (ip >> 16 & 0xff), (ip >> 24 & 0xff));
+                String msg = String.format(Locale.ENGLISH,  "Press 'OK' to start streaming [Wifi Strength is %d %%, IP %s]", level, ipStrg);
+                Intent intent = new Intent(INTENT_STATUS_UPDATE);
+                intent.putExtra("msg", msg);
+                sendBroadcast(intent);
                 appContext.wg.connectVPN(FullscreenActivity.this, ip);
+                appContext.fritzBox.setNetworkStatus(true);
             }
 
             @Override
             public void onLost(Network network) {
-                binding.statusbar.setText("No network connectivity");
+                String msg = "No network connectivity";
+                Intent intent = new Intent(INTENT_STATUS_UPDATE);
+                intent.putExtra("msg", msg);
+                sendBroadcast(intent);
+                appContext.fritzBox.setNetworkStatus(false);
             }
         };
         ConnectivityManager connectivityManager =
@@ -978,8 +991,10 @@ public class FullscreenActivity extends AppCompatActivity implements View.OnClic
         registerReceiver(cfgUpdateReceiver, new IntentFilter(INTENT_CFG_UPDATE));
         registerReceiver(enigma2Receiver, new IntentFilter(INTENT_ENIGMA2));
         registerReceiver(enigma2Receiver, new IntentFilter(INTENT_ENIGMA2_AVAIL));
+        registerReceiver(enigma2Receiver, new IntentFilter(INTENT_ENIGMA2_STATUS));
         registerReceiver(ftpReceiver, new IntentFilter(INTENT_RCV_FILES));
         registerReceiver(wgMonitor, new IntentFilter(INTENT_WG_MONITOR));
+        registerReceiver(statusUpdateReceiver, new IntentFilter(INTENT_STATUS_UPDATE));
     }
 
     @Override
@@ -991,6 +1006,7 @@ public class FullscreenActivity extends AppCompatActivity implements View.OnClic
         unregisterReceiver(enigma2Receiver);
         unregisterReceiver(ftpReceiver);
         unregisterReceiver(wgMonitor);
+        unregisterReceiver(statusUpdateReceiver);
         super.onStop();
     }
 
@@ -1032,7 +1048,7 @@ public class FullscreenActivity extends AppCompatActivity implements View.OnClic
             fritzBoxMonitor = new FritzBoxMonitor(this, appContext);
             fritzBoxMonitor.start();
         }
-        if(appContext.powerPlug.isEnabled) {
+        if(appContext.powerPlug.isEnabled && !appContext.powerPlug.useWoL) {
             powerplugMonitor = new PowerplugMonitor(this, appContext);
             powerplugMonitor.start();
         }
@@ -1286,6 +1302,11 @@ public class FullscreenActivity extends AppCompatActivity implements View.OnClic
                 String msg = intent.getStringExtra("msg");
                 Toast.makeText(FullscreenActivity.this, msg, Toast.LENGTH_LONG).show();
             }
+
+            if(INTENT_ENIGMA2_STATUS.equals(intent.getAction())) {
+                String msg = intent.getStringExtra("msg");
+                binding.statusbar.setText(msg);
+            }
         }
 
     }
@@ -1311,6 +1332,17 @@ public class FullscreenActivity extends AppCompatActivity implements View.OnClic
                     binding.statusbar.getLayoutParams().width = stationWidth * 7;
                 }
 
+            }
+        }
+    }
+
+    public class StatusUpdateReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+            if(INTENT_STATUS_UPDATE.equals(intent.getAction())) {
+                binding.statusbar.setText(intent.getStringExtra("msg"));
             }
         }
     }
