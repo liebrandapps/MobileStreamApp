@@ -869,7 +869,7 @@ public class FullscreenActivity extends AppCompatActivity implements View.OnClic
 
     private void startPlayer(Station s, boolean resolvedm3u8, String urlAudio, String resolvedUrlVideo) {
         if (!resolvedm3u8 && (s.url.endsWith(".m3u8") || s.url.contains("m3u"))) {
-            M3U8Handler m3u8hdl = new M3U8Handler(this, s);
+            M3U8Handler m3u8hdl = new M3U8Handler(this, appContext, s);
             m3u8hdl.start();
             return;
         }

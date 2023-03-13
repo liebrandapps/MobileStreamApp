@@ -14,6 +14,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -42,6 +43,7 @@ public class Configuration {
     private static final String STATION_COUNT = "stationCount";
     private static final String KEY_LONGITUDE = "longitude";
     private static final String KEY_LATITUDE = "latitude";
+    private static final String KEY_BANDWIDTH = "bandwidth";
     private static final String SECTION_STATION = "station_%d";
 
 
@@ -55,6 +57,7 @@ public class Configuration {
     private final AppContext appContext;
 
     public float longitude, latitude;
+    public int bandwidth;
 
     public Configuration(AppContext appContext) {
         ftpServerList = new HashMap<>();
@@ -62,6 +65,7 @@ public class Configuration {
         this.appContext = appContext;
         longitude = (float)13.405;
         latitude = (float)52.52;
+        bandwidth = 10000000;
     }
 
     public boolean configExists(SharedPreferences sPrefs) {
@@ -90,6 +94,7 @@ public class Configuration {
         appContext.powerPlug.load(sPrefs);
         longitude = sPrefs.getFloat(KEY_LONGITUDE, longitude);
         latitude = sPrefs.getFloat(KEY_LATITUDE, latitude);
+        bandwidth = sPrefs.getInt(KEY_BANDWIDTH, bandwidth);
     }
 
     public void save(SharedPreferences sPrefs) {
@@ -111,6 +116,7 @@ public class Configuration {
        appContext.powerPlug.save(editor);
        editor.putFloat(KEY_LONGITUDE, longitude);
        editor.putFloat(KEY_LATITUDE, latitude);
+       editor.putInt(KEY_BANDWIDTH, bandwidth);
 
        DateFormat df = DateFormat.getDateTimeInstance();
        String now = df.format(new Date());
@@ -126,6 +132,7 @@ public class Configuration {
         addSection(SECTION_GENERAL, sb);
         addKeyValue(FTP_COUNT, ftpServerList.size(), sb);
         addKeyValue(STATION_COUNT, stationMap.size(), sb);
+        addKeyValue(KEY_BANDWIDTH, bandwidth, sb);
         addComment("Enter longitude / latitude for whether information", sb);
         addKeyValue(KEY_LONGITUDE, longitude, sb);
         addKeyValue(KEY_LATITUDE, latitude, sb);
@@ -258,6 +265,9 @@ public class Configuration {
                     }
                 }
             }
+            bandwidth = Integer.parseInt(Objects.requireNonNull(mapGeneral.get(KEY_BANDWIDTH)));
+            longitude = Float.parseFloat(Objects.requireNonNull(mapGeneral.get(KEY_LONGITUDE)));
+            latitude = Float.parseFloat(Objects.requireNonNull(mapGeneral.get(KEY_LATITUDE)));
         }
         Map<String, String> mapEnigma2 = entries.get(Enigma2.SECTION);
         if(mapEnigma2!=null) {

@@ -28,7 +28,7 @@ public class M3U8Handler extends Thread {
     private static final String EXT_MEDIA = "#EXT-X-MEDIA";
     private static final int resX = 1280;
     private static final int resY = 720;
-    private static final int bandwidth = 10000000;
+    private static int bandwidth = 10000000;
     private static final String KEY_BANDWIDTH ="BANDWIDTH";
     private static final String KEY_TYPE = "TYPE";
     private static final String TYPE_AUDIO = "AUDIO";
@@ -43,11 +43,12 @@ public class M3U8Handler extends Thread {
     private Context ctx;
     private String stationName;
 
-    public M3U8Handler(Context context, Station s) {
+    public M3U8Handler(Context context, AppContext appContext, Station s) {
         super();
         station = s;
         ctx = context;
         this.stationName = stationName;
+        bandwidth = appContext.configuration.bandwidth;
     }
 
     @Override
