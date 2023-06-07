@@ -78,8 +78,8 @@ public class Station {
         return result;
     }
 
-    public void save(SharedPreferences.Editor editor) {
-        String strgIndex = "S" + String.valueOf(index);
+    public void save(SharedPreferences.Editor editor, int id) {
+        String strgIndex = "S" + String.valueOf(id);
         editor.putString(strgIndex + ":" + NAME, text);
         editor.putString(strgIndex + ":" + URL, url);
         editor.putInt(strgIndex + ":" + SLOT, slot);

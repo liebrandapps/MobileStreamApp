@@ -100,8 +100,10 @@ public class Configuration {
     public void save(SharedPreferences sPrefs) {
        SharedPreferences.Editor editor = sPrefs.edit();
 
+       int idx = 0;
        for(Station s : stationMap.values()) {
-           s.save(editor);
+           s.save(editor, idx);
+           idx += 1;
        }
        for(FTPConfiguration ftp : ftpServerList.values()) {
            ftp.save(editor);

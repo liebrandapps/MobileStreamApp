@@ -127,7 +127,7 @@
             android:background="@color/dark_gray"
             android:layout_below="@id/full_screen_video"
             android:textColor="#FFFFFF"
-            android:text="CNN HD" />
+            android:text="-01-" />
 
         <Button
             android:id="@+id/station2"
@@ -137,7 +137,7 @@
             android:layout_alignTop="@id/station1"
             android:layout_toEndOf="@id/station1"
             android:textColor="#FFFFFF"
-            android:text="ARD HD" />
+            android:text="-02-" />
 
         <Button
             android:id="@+id/station3"
@@ -147,7 +147,7 @@
             android:layout_alignTop="@id/station1"
             android:layout_toEndOf="@id/station2"
             android:textColor="#FFFFFF"
-            android:text="ZDF HD" />
+            android:text="-03-" />
 
         <Button
             android:id="@+id/station4"
@@ -157,7 +157,7 @@
             android:layout_alignTop="@id/station1"
             android:layout_toEndOf="@id/station3"
             android:textColor="#FFFFFF"
-            android:text="WDR HD" />
+            android:text="-04-" />
 
         <Button
             android:id="@+id/station5"
@@ -167,7 +167,7 @@
             android:layout_alignTop="@id/station1"
             android:layout_toEndOf="@id/station4"
             android:textColor="#FFFFFF"
-            android:text="BBC ONE HD" />
+            android:text="-05-" />
         <Button
             android:id="@+id/station6"
             android:layout_width="100dp"
@@ -176,7 +176,7 @@
             android:layout_alignTop="@id/station1"
             android:layout_toEndOf="@id/station5"
             android:textColor="#FFFFFF"
-            android:text="BBC TWO HD" />
+            android:text="-06-" />
         <Button
             android:id="@+id/station7"
             android:layout_width="100dp"
@@ -185,7 +185,7 @@
             android:layout_alignTop="@id/station1"
             android:layout_toEndOf="@id/station6"
             android:textColor="#FFFFFF"
-            android:text="ITV Be" />
+            android:text="-07-" />
         <Button
             android:id="@+id/station8"
             android:layout_width="100dp"

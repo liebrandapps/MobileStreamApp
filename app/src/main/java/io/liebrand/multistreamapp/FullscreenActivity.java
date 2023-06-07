@@ -188,6 +188,7 @@ public class FullscreenActivity extends AppCompatActivity implements View.OnClic
     HashMap<String, String> ftpFiles;
     int ftpTopIndex;
     String ftpUrl;
+    String cachedIPMsg;
 
     Intent createFileIntent;
     ActivityResultLauncher<Intent> createFileLauncher;
@@ -332,6 +333,7 @@ public class FullscreenActivity extends AppCompatActivity implements View.OnClic
         /*
             Networking
          */
+        cachedIPMsg = null;
         ConnectivityManager.NetworkCallback networkCallback = new ConnectivityManager.NetworkCallback() {
             @Override
             public void onAvailable(Network network) {
@@ -343,6 +345,7 @@ public class FullscreenActivity extends AppCompatActivity implements View.OnClic
                 int ip = wifi.getConnectionInfo().getIpAddress();
                 String ipStrg = String.format(Locale.ENGLISH, "%d.%d.%d.%d", (ip & 0xff), (ip >> 8 & 0xff), (ip >> 16 & 0xff), (ip >> 24 & 0xff));
                 String msg = String.format(Locale.ENGLISH,  "Press 'OK' to start streaming [Wifi Strength is %d %%, IP %s]", level, ipStrg);
+                cachedIPMsg = msg;
                 Intent intent = new Intent(INTENT_STATUS_UPDATE);
                 intent.putExtra("msg", msg);
                 sendBroadcast(intent);
@@ -353,6 +356,7 @@ public class FullscreenActivity extends AppCompatActivity implements View.OnClic
             @Override
             public void onLost(Network network) {
                 String msg = "No network connectivity";
+                cachedIPMsg = msg;
                 Intent intent = new Intent(INTENT_STATUS_UPDATE);
                 intent.putExtra("msg", msg);
                 sendBroadcast(intent);
@@ -1055,6 +1059,11 @@ public class FullscreenActivity extends AppCompatActivity implements View.OnClic
         appContext.envHandler = new EnvHandler(this, appContext);
         appContext.envHandler.start();
         appContext.configWebServer.start();
+        if(cachedIPMsg!=null) {
+            Intent intent = new Intent(INTENT_STATUS_UPDATE);
+            intent.putExtra("msg", cachedIPMsg);
+            sendBroadcast(intent);
+        }
         super.onResume();
     }
 
@@ -1104,13 +1113,13 @@ public class FullscreenActivity extends AppCompatActivity implements View.OnClic
         s.text = "ARD";
         s.url = "https://mcdn.daserste.de/daserste/de/master.m3u8";
         s.mediaType = Station.MTYPE_HLS;
-        appContext.configuration.stationMap.put(1, s);
+        appContext.configuration.stationMap.put(0, s);
         s = new Station();
         s.slot = 2;
         s.text = "ZDF";
         s.url="http://zdf-hls-15.akamaized.net/hls/live/2016498/de/high/master.m3u8";
         s.mediaType = Station.MTYPE_HLS;
-        appContext.configuration.stationMap.put(2, s);
+        appContext.configuration.stationMap.put(1, s);
     }
 
 
