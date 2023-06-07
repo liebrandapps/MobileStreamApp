@@ -265,10 +265,22 @@ public class Configuration {
                     }
                 }
             }
-            bandwidth = Integer.parseInt(Objects.requireNonNull(mapGeneral.get(KEY_BANDWIDTH)));
-            longitude = Float.parseFloat(Objects.requireNonNull(mapGeneral.get(KEY_LONGITUDE)));
-            latitude = Float.parseFloat(Objects.requireNonNull(mapGeneral.get(KEY_LATITUDE)));
+            if(mapGeneral.containsKey(KEY_BANDWIDTH)) {
+                bandwidth = Integer.parseInt(Objects.requireNonNull(mapGeneral.get(KEY_BANDWIDTH)));
+            }
+            else {
+                bandwidth = 10000000;
+            }
+            if(mapGeneral.containsKey(KEY_LONGITUDE) && mapGeneral.containsKey(KEY_LATITUDE)) {
+                longitude = Float.parseFloat(Objects.requireNonNull(mapGeneral.get(KEY_LONGITUDE)));
+                latitude = Float.parseFloat(Objects.requireNonNull(mapGeneral.get(KEY_LATITUDE)));
+            }
+            else {
+                longitude = (float)13.405;
+                latitude = (float)52.52;
+            }
         }
+
         Map<String, String> mapEnigma2 = entries.get(Enigma2.SECTION);
         if(mapEnigma2!=null) {
             appContext.enigma2.importFromIni(mapEnigma2);
